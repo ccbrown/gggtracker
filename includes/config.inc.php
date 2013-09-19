@@ -6,6 +6,9 @@ $config = array(
 	'page'   => array(
 		'date_format'     => 'M j, Y G:i A',
 		'time_offset'     => 0,
+		'footer'          =>
+			'Please direct feedback to <a href="http://www.pathofexile.com/forum/view-thread/69448" target="_blank">this thread</a>. '.
+			'Want a new feature? <a href="https://github.com/ccbrown/gggtracker" target="_blank">Add it yourself!</a>',
 	),
 	
 	'mysql'  => array(
@@ -29,7 +32,7 @@ $config = array(
 			'Qarl', 'Andrew_GGG', 'Damien_GGG', 'Russell', 'Joel_GGG', 'Ari', 'Thomas',
 			'BrianWeissman', 'Edwin_GGG', 'Support', 'Dylan', 'MaxS', 'Ammon_GGG', 
 			'Jess_GGG', 'Robbie_GGG', 'GGG_Neon', 'Jason_GGG', 'Henry_GGG', 'Luca_GGG',
-			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG',
+			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG', 
 		),
 		'twitter_name'    => 'pathofexile',
 	),
