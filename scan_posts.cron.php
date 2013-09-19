@@ -10,7 +10,6 @@ foreach ($_['poe']['forum_posters'] as $poster) {
 	echo 'Indexing posts by '.htmlspecialchars($poster).'...<br />';
 	if (!index_poster($poster)) {
 		echo 'Failure...<br />';
-		break;
 	}
 }
 ?>
