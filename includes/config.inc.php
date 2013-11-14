@@ -32,7 +32,7 @@ $config = array(
 			'Andrew_GGG', 'Damien_GGG', 'Russell', 'Joel_GGG', 'Ari', 'Thomas',
 			'BrianWeissman', 'Edwin_GGG', 'Support', 'Dylan', 'MaxS', 'Ammon_GGG',
 			'Jess_GGG', 'Robbie_GGG', 'GGG_Neon', 'Jason_GGG', 'Henry_GGG',
-			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG',
+			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG', 'Kieren_GGG', 
 		),
 		'twitter_name'    => 'pathofexile',
 	),
