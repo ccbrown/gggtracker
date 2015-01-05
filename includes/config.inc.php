@@ -33,7 +33,7 @@ $config = array(
 	),
 	
 	/**
-	* MySQL information.
+	* MySQL information. Don't forget to initialize the database with the contents of database.sql.
 	*/
 	'mysql' => array(
 		'host'      => '',
