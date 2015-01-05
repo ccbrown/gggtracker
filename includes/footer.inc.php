@@ -4,7 +4,7 @@ if (!defined('IN_GGGT')) { die(); }
 				<script>
 				$(function() {
 					$('.js-time').each(function() {
-						$(this).text($.format.date(new Date($(this).data('time') * 1000), 'MMM d, yyyy h:mm a'));
+						$(this).text($.format.date(new Date($(this).data('time') * 1000), '<?= $_['page']['js_date_format'] ?>'));
 					});
 				});
 				</script>

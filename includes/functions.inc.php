@@ -69,7 +69,7 @@ function create_date($timestamp, $format = NULL) {
 	if ($timestamp === NULL) {
 		$date = 'N/A';
 	} else {
-		$date = gmdate($format === NULL ? $_['page']['date_format'] : $format, $timestamp + $_['page']['time_offset']);
+		$date = gmdate($format === NULL ? $_['page']['php_date_format'] : $format, $timestamp + $_['page']['php_time_offset']);
 	}
 	
 	return $date;
@@ -81,7 +81,7 @@ function create_gmdate($timestamp, $format = NULL) {
 	if ($timestamp === NULL) {
 		$date = 'N/A';
 	} else {
-		$date = gmdate($format === NULL ? $_['page']['date_format'] : $format, $timestamp);
+		$date = gmdate($format === NULL ? $_['page']['php_date_format'] : $format, $timestamp);
 	}
 	
 	return $date;
