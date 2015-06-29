@@ -17,7 +17,7 @@ function fetch_page($url, $cookie = '', $redirect_count = 0) {
 	
 	curl_close($ch);
 
-	if ($info['http_code'] == 302) {
+	if ($info['http_code'] == 301 || $info['http_code'] == 302) {
 		return $redirect_count < 5 ? fetch_page($info['redirect_url'], $cookie, $redirect_count + 1) : null;
 	}
 
