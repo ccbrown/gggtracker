@@ -81,7 +81,7 @@ $config = array(
 			'Jess_GGG', 'Robbie_GGG', 'GGG_Neon', 'Jason_GGG', 'Henry_GGG',
 			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG', 'Kieren_GGG', 
 			'Yeran_GGG', 'Gary_GGG', 'Dan_GGG', 'Jared_GGG', 'Brian_GGG', 'RobbieL_GGG',
-			'Arthur_GGG',
+			'Arthur_GGG', 'NickK_GGG'
 		),
 
 		/**
