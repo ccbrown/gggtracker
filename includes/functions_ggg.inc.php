@@ -38,7 +38,7 @@ function inner_html($element) {
 function get_posts($poster, $page) {
 	global $_, $SQL;
 
-	$html = fetch_page('http://www.pathofexile.com/account/view-posts/'.urlencode($poster).'/page/'.urlencode($page), 'PHPSESSID='.$_['poe']['forum_sessid']);
+	$html = fetch_page('http://www.pathofexile.com/account/view-posts/'.urlencode($poster).'/page/'.urlencode($page), 'POESESSID='.$_['poe']['forum_sessid']);
 	
 	if (!$html) {
 		return false;
