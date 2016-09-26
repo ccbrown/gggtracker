@@ -9,21 +9,21 @@ $config = array(
 		* http://php.net/manual/en/function.date.php for more information.
 		*/
 		'php_date_format' => 'M j, Y G:i A',
-		
+
 		/**
-		* The offset in seconds of the default time zone used for displaying dates. 
+		* The offset in seconds of the default time zone used for displaying dates.
 		*/
 		'php_time_offset' => 0,
 
 		/**
-		* The format that dates constructed via JavaScript are displayed in. See 
+		* The format that dates constructed via JavaScript are displayed in. See
 		* https://github.com/phstc/jquery-dateFormat for more information.
 		*
 		* This is used when possible to ensure that dates match the visitor's local
 		* time zone. It should be equivalent to the PHP date format.
 		*/
 		'js_date_format' => 'MMM d, yyyy h:mm a',
-		
+
 		/**
 		* Footer HTML.
 		*/
@@ -31,7 +31,7 @@ $config = array(
 			'Please direct feedback to <a href="http://www.pathofexile.com/forum/view-thread/69448" target="_blank">this thread</a>. '.
 			'Want a new feature? <a href="https://github.com/ccbrown/gggtracker" target="_blank">Add it yourself!</a>',
 	),
-	
+
 	/**
 	* MySQL information. Don't forget to initialize the database with the contents of database.sql.
 	*/
@@ -45,7 +45,7 @@ $config = array(
 
 	/**
 	* To poll forum posts and Twitter updates, two cron jobs should be set up to invoke
-	* scan_posts.cron.php and update_tweets.cron.php. These are publically accessible 
+	* scan_posts.cron.php and update_tweets.cron.php. These are publically accessible
 	* files, so to prevent abuse, you must create a random secret here. Then, when
 	* invoking the scripts, pass that secret as a GET parameter.
 	*
@@ -54,18 +54,18 @@ $config = array(
 	'cron' => array(
 		'secret' => '',
 	),
-	
+
 	'poe' => array(
 		/**
 		* The timezone of the forum account used (e.g. 'GMT' or 'PST').
 		*/
 		'forum_timezone' => '',
-		
+
 		/**
 		* The value of the PHPSESSID cookie for a valid login session.
 		*/
 		'forum_sessid' => '',
-		
+
 		/**
 		* The id of the news forum.
 		*/
@@ -75,13 +75,16 @@ $config = array(
 		* An array of forum posters to track.
 		*/
 		'forum_posters' => array(
-			'Chris', 'Jonathan', 'Erik', 'Mark_GGG', 'Samantha', 'Rory', 'Rhys', 'Qarl',
-			'Andrew_GGG', 'Damien_GGG', 'Russell', 'Joel_GGG', 'Ari', 'Thomas',
-			'BrianWeissman', 'Edwin_GGG', 'Support', 'Dylan', 'MaxS', 'Ammon_GGG',
-			'Jess_GGG', 'Robbie_GGG', 'GGG_Neon', 'Jason_GGG', 'Henry_GGG',
-			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG', 'Kieren_GGG', 
-			'Yeran_GGG', 'Gary_GGG', 'Dan_GGG', 'Jared_GGG', 'Brian_GGG', 'RobbieL_GGG',
-			'Arthur_GGG', 'NickK_GGG'
+			'Chris', 'Jonathan', 'Erik', 'Mark_GGG', 'Samantha', 'Rory',
+			'Rhys', 'Qarl', 'Andrew_GGG', 'Damien_GGG', 'Russell', 'Joel_GGG', 'Ari',
+			'Thomas', 'BrianWeissman', 'Edwin_GGG', 'Support', 'Dylan', 'MaxS',
+			'Ammon_GGG', 'Jess_GGG', 'Robbie_GGG', 'GGG_Neon', 'Jason_GGG', 'Henry_GGG',
+			'Michael_GGG', 'Bex_GGG', 'Cagan_GGG', 'Daniel_GGG', 'Kieren_GGG', 'Yeran_GGG',
+			'Gary_GGG', 'Dan_GGG', 'Jared_GGG', 'Brian_GGG', 'RobbieL_GGG', 'Arthur_GGG',
+			'NickK_GGG', 'Felipe_GGG', 'Alex_GGG', 'Alexcc_GGG', 'Andy', 'CJ_GGG',
+			'Eben_GGG', 'Emma_GGG', 'Ethan_GGG', 'Fitzy_GGG', 'Hartlin_GGG', 'Jake_GGG',
+			'Lionel_GGG', 'Melissa_GGG', 'MikeP_GGG', 'Novynn', 'Rachel_GGG', 'Rob_GGG',
+			'Roman_GGG', 'Sarah_GGG', 'SarahB_GGG', 'Tom_GGG'
 		),
 
 		/**
@@ -89,7 +92,7 @@ $config = array(
 		*/
 		'twitter_name' => 'pathofexile',
 	),
-	
+
 	/**
 	* Twitter-supplied credentials. Create an app at https://apps.twitter.com and obtain
 	* these through the "Keys and Access Tokens" tab for your app.
@@ -103,7 +106,7 @@ $config = array(
 );
 
 /**
-* Any of the above can be overridden in a local configuration file. Simply create a file named 
+* Any of the above can be overridden in a local configuration file. Simply create a file named
 * local_config.php that looks like this:
 *
 * <?php
