@@ -22,12 +22,12 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="icon">').append($('<a>')
-                    .attr('href', 'http://www.pathofexile.com/forum/view-thread/' + activity.thread_id + '/filter-account-type/staff')
+                    .attr('href', 'https://www.pathofexile.com/forum/view-thread/' + activity.thread_id + '/filter-account-type/staff')
                     .append($('<img src="static/images/forum-thread.png" />'))
                 ));
             } else if (type == 'reddit_comment') {
                 $tr.append($('<td class="icon">').append($('<a>')
-                    .attr('href', 'http://www.reddit.com/r/pathofexile/comments/' + activity.post_id + '//' + activity.id + '/?context=3')
+                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id)
                     .append($('<img src="static/images/snoo.png" />'))
                 ));
             } else {
@@ -49,7 +49,7 @@ function loadActivity() {
                 ));
             } else if (type == "reddit_comment") {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id)
+                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id + '//' + activity.id + '/?context=3')
                     .text(activity.post_title)
                 ));
             }
