@@ -61,10 +61,10 @@ func main() {
 	e.GET("/activity.json", server.ActivityHandler(db))
 	e.GET("/rss", server.RSSHandler(db))
 	e.GET("/rss.php", func(c echo.Context) error {
-		return c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("%v://%v/rss", c.Scheme(), c.Request().Host))
+		return c.Redirect(http.StatusMovedPermanently, server.AbsoluteURL(c, "/rss"))
 	})
 	e.File("/favicon.ico", path.Join(viper.GetString("staticdir"), "favicon.ico"))
 	e.Static("/static", viper.GetString("staticdir"))
 
-	log.Fatal(e.Start(fmt.Sprintf(":%v", viper.GetString("port"))))
+	log.Fatal(e.Start(fmt.Sprintf(":%v", viper.GetInt("port"))))
 }

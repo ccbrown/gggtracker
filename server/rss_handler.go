@@ -36,7 +36,7 @@ func RSSHandler(db *Database) echo.HandlerFunc {
 			Channel: rssChannel{
 				Title:       "GGG Tracker",
 				Description: "Latest activity from Grinding Gear Games",
-				Link:        fmt.Sprintf("%v://%v", c.Scheme(), c.Request().Host),
+				Link:        AbsoluteURL(c, ""),
 			},
 		}
 		for _, a := range activity {

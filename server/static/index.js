@@ -31,7 +31,10 @@ function loadActivity() {
                     .append($('<img src="static/images/snoo.png" />'))
                 ));
             } else {
-                $tr.append($('<td class="icon">').append($('<img src="static/images/snoo.png" />')));
+                $tr.append($('<td class="icon">').append($('<a>')
+                    .attr('href', 'https://www.reddit.com' + activity.permalink)
+                    .append($('<img src="static/images/snoo.png" />'))
+                ));
             }
 
             if (type == 'forum_post') {
@@ -41,7 +44,7 @@ function loadActivity() {
                 ));
             } else if (type == "reddit_post") {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com' + activity.permalink)
+                    .attr('href', activity.url ? activity.url : ('https://www.reddit.com/r/pathofexile/comments/' + activity.post_id))
                     .text(activity.title)
                 ));
             } else if (type == "reddit_comment") {

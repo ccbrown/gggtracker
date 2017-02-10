@@ -126,7 +126,7 @@ func (indexer *RedditIndexer) redditActivity(user string, page string) ([]Activi
 	if err != nil {
 		return nil, "", err
 	}
-	req.Header.Add("User-Agent", "GGGTracker (gggtracker.com) by /u/rz2yoj")
+	req.Header.Add("User-Agent", "GGG Tracker (https://github.com/ccbrown/gggtracker) by /u/rz2yoj")
 
 	resp, err := client.Do(req)
 	if err != nil {
