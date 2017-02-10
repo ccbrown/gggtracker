@@ -54,7 +54,7 @@ func RSSHandler(db *Database) echo.HandlerFunc {
 				comment := a.(*RedditComment)
 				response.Items = append(response.Items, rssItem{
 					Title:       comment.Author + " - " + comment.PostTitle,
-					Link:        comment.PostURL(),
+					Link:        comment.CommentURL(),
 					GUID:        "reddit-comment-" + comment.Id,
 					Description: comment.BodyHTML,
 					PubDate:     comment.Time.Format(time.RFC1123Z),

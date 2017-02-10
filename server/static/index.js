@@ -44,12 +44,12 @@ function loadActivity() {
                 ));
             } else if (type == "reddit_post") {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', activity.url ? activity.url : ('https://www.reddit.com/r/pathofexile/comments/' + activity.post_id))
+                    .attr('href', activity.url ? activity.url : ('https://www.reddit.com' + activity.permalink))
                     .text(activity.title)
                 ));
             } else if (type == "reddit_comment") {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id + '//' + activity.id + '/?context=3')
+                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id + '/-/' + activity.id + '/?context=3')
                     .text(activity.post_title)
                 ));
             }

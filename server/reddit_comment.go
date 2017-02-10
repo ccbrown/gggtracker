@@ -27,3 +27,7 @@ func (c *RedditComment) ActivityKey() uint32 {
 func (c *RedditComment) PostURL() string {
 	return fmt.Sprintf("https://www.reddit.com/r/pathofexile/comments/%v/", c.PostId)
 }
+
+func (c *RedditComment) CommentURL() string {
+	return fmt.Sprintf("https://www.reddit.com/r/pathofexile/comments/%v/-/%v/?context=3", c.PostId, c.Id)
+}
