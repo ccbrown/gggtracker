@@ -1,12 +1,27 @@
-var currentPage = undefined
+var currentPage = undefined;
+
+var POE = {
+    Forum: {
+        SpoilerClick: function(element) {
+            var $spoiler = $(element).closest('.spoiler');
+            if ($spoiler.hasClass('spoilerHidden')) {
+                $(element).val("Hide");
+                $spoiler.removeClass('spoilerHidden');
+            } else {
+                $(element).val("Show");
+                $spoiler.addClass('spoilerHidden');
+            }
+        },
+    },
+};
 
 function loadActivity() {
     var page = location.hash.replace(/^#page=/, '');
     if (currentPage !== undefined && page == currentPage) {
         return;
     }
-    var previousPage = currentPage
-    currentPage = page
+    var previousPage = currentPage;
+    currentPage = page;
 
     $.get('activity.json?next=' + page, function(data) {
         var $tbody = $('#activity-table tbody');

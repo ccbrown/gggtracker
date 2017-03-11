@@ -208,3 +208,29 @@ td.body blockquote {
     margin: 1.5em 10px;
     padding: 0.5em 10px;
 }
+
+.spoilerHidden .spoilerContent {
+    display: none;
+}
+
+.spoilerTitle input[type="button"] {
+    margin-left: 8px;
+    color: #c9ba8a;
+    background-color: #0f0f0f;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.spoilerTitle input[type="button"]:hover {
+    text-decoration: underline;
+}
+
+.spoiler {
+    border: 1px solid #1a1a1a;
+    background-color: #323232;
+}
+
+.spoilerTitle, .spoilerContent {
+    padding: 8px;
+}

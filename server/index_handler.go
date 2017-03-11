@@ -11,7 +11,7 @@ var index = `<!DOCTYPE html><html>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>GGG Tracker</title>
     <link rel="shortcut icon" href="static/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="static/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/style.css?v2" />
     <link rel="alternate" type="application/rss+xml" title="GGG Tracker Forum Feed" href="rss" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -63,7 +63,7 @@ var index = `<!DOCTYPE html><html>
         </footer>
     </div>
 
-    <script src="static/index.js?v3"></script>
+    <script src="static/index.js?v4"></script>
 </body>
 </html>`
 
