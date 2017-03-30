@@ -54,7 +54,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.pathofexile.com/forum/view-thread/' + activity.thread_id + '/page/' + activity.page_number + '#p' + activity.id)
+                    .attr('href', 'https://www.pathofexile.com/forum/view-post/' + activity.id)
                     .text(activity.thread_title)
                 ));
             } else if (type == "reddit_post") {
