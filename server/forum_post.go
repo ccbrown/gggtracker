@@ -26,5 +26,5 @@ func (p *ForumPost) ActivityKey() uint32 {
 }
 
 func (p *ForumPost) PostURL() string {
-	return fmt.Sprintf("https://www.pathofexile.com/forum/view-thread/%v/page/%v#p%v", p.ThreadId, p.PageNumber, p.Id)
+	return fmt.Sprintf("https://www.pathofexile.com/forum/view-post/%v", p.Id)
 }
