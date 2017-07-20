@@ -39,7 +39,7 @@ func (indexer *RedditIndexer) run() {
 	users := []string{
 		"chris_wilson", "Bex_GGG", "Negitivefrags", "Omnitect", "qarldev", "BrianWeissman_GGG",
 		"Mark_GGG", "RhysGGG", "Dan_GGG", "Rory_Rackham", "Blake_GGG", "Fitzy_GGG", "Hartlin_GGG",
-		"Hrishi_GGG", "Baltic_GGG", "KamilOrmanJanowski", 
+		"Hrishi_GGG", "Baltic_GGG", "KamilOrmanJanowski",
 	}
 	next := 0
 
