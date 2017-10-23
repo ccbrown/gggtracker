@@ -197,6 +197,12 @@ td.icon img {
     transform: translate(-50%, -50%);
 }
 
+td.title {
+    max-width: 450px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 td.body {
     background-color: #262626;
     padding: 10px;
