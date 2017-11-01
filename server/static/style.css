@@ -200,7 +200,6 @@ td.icon img {
 td.title {
     max-width: 450px;
     overflow: hidden;
-    white-space: nowrap;
 }
 
 td.body {
