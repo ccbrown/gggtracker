@@ -205,6 +205,8 @@ td.title {
 td.body {
     background-color: #262626;
     padding: 10px;
+    max-width: 960px;
+    overflow: hidden;	
 }
 
 td.body blockquote {
