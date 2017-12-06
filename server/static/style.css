@@ -214,6 +214,10 @@ td.body blockquote {
     padding: 0.5em 10px;
 }
 
+td.body img {
+    max-width: 100%;
+}
+
 .spoilerHidden .spoilerContent {
     display: none;
 }
