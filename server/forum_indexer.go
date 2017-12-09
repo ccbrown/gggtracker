@@ -210,7 +210,7 @@ func (indexer *ForumIndexer) index(poster string, timezone *time.Location) {
 }
 
 func ScrapeForumTimezone(doc *goquery.Document) (*time.Location, error) {
-	sel := doc.Find("#timezone option[selected]")
+	sel := doc.Find(`select[name="preferences[timezone]"] option[selected]`)
 	if sel == nil || sel.AttrOr("value", "") == "" {
 		return nil, errors.New("unable to find timezone selection")
 	}
