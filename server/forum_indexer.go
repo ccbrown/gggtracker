@@ -89,13 +89,15 @@ func (indexer *ForumIndexer) run() {
 	for _, host := range hosts {
 		host := host
 		go func() {
-			for _, account := range accounts {
-				select {
-				case <-indexer.closeSignal:
-					return
-				default:
-					indexer.index(host, account, timezone)
-					time.Sleep(time.Second)
+			for {
+				for _, account := range accounts {
+					select {
+					case <-indexer.closeSignal:
+						return
+					default:
+						indexer.index(host, account, timezone)
+						time.Sleep(time.Second)
+					}
 				}
 			}
 		}()
