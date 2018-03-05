@@ -9,16 +9,17 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type ForumIndexer struct {
 	configuration ForumIndexerConfiguration
-	closeSignal   chan bool
+	closeSignal   chan struct{}
 }
 
 type ForumIndexerConfiguration struct {
@@ -29,20 +30,30 @@ type ForumIndexerConfiguration struct {
 func NewForumIndexer(configuration ForumIndexerConfiguration) (*ForumIndexer, error) {
 	ret := &ForumIndexer{
 		configuration: configuration,
-		closeSignal:   make(chan bool),
+		closeSignal:   make(chan struct{}),
 	}
 	go ret.run()
 	return ret, nil
 }
 
 func (indexer *ForumIndexer) Close() {
-	indexer.closeSignal <- true
+	close(indexer.closeSignal)
 }
 
 func (indexer *ForumIndexer) run() {
 	log.Info("starting forum indexer")
 
-	posters := []string{
+	hosts := []string{
+		"www.pathofexile.com",
+		"br.pathofexile.com",
+		"ru.pathofexile.com",
+		"th.pathofexile.com",
+		"de.pathofexile.com",
+		"fr.pathofexile.com",
+		"es.pathofexile.com",
+	}
+
+	accounts := []string{
 		"Chris", "Jonathan", "Erik", "Mark_GGG", "Samantha", "Rory", "Rhys", "Qarl", "Andrew_GGG",
 		"Damien_GGG", "Joel_GGG", "Ari", "Thomas", "BrianWeissman", "Edwin_GGG", "Support", "Dylan",
 		"MaxS", "Ammon_GGG", "Jess_GGG", "Robbie_GGG", "GGG_Neon", "Jason_GGG", "Henry_GGG",
@@ -53,39 +64,48 @@ func (indexer *ForumIndexer) run() {
 		"Rachel_GGG", "Rob_GGG", "Roman_GGG", "Sarah_GGG", "SarahB_GGG", "Tom_GGG", "Natalia_GGG",
 		"Jeff_GGG",
 	}
-	next := 0
 
 	timezone := (*time.Location)(nil)
 
-	for {
+	for timezone == nil {
 		select {
 		case <-indexer.closeSignal:
 			return
 		default:
-			if timezone == nil {
-				tz, err := indexer.sessionTimezone()
-				if err != nil {
-					log.WithError(err).Error("error getting forum timezone")
-				} else {
-					timezone = tz
-					log.WithFields(log.Fields{
-						"timezone": timezone,
-					}).Info("forum timezone obtained")
-				}
+			if tz, err := indexer.sessionTimezone(); err != nil {
+				log.WithError(err).Error("error getting forum timezone")
 			} else {
-				indexer.index(posters[next], timezone)
-				next += 1
-				if next >= len(posters) {
-					next = 0
-				}
+				timezone = tz
+				log.WithField("timezone", timezone).Info("forum timezone obtained")
+				break
 			}
 			time.Sleep(time.Second)
 		}
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(len(hosts))
+
+	for _, host := range hosts {
+		host := host
+		go func() {
+			for _, account := range accounts {
+				select {
+				case <-indexer.closeSignal:
+					return
+				default:
+					indexer.index(host, account, timezone)
+					time.Sleep(time.Second)
+				}
+			}
+		}()
+	}
+
+	wg.Wait()
 }
 
-func (indexer *ForumIndexer) requestDocument(resource string) (*goquery.Document, error) {
-	urlString := fmt.Sprintf("https://www.pathofexile.com/%v", strings.TrimPrefix(resource, "/"))
+func (indexer *ForumIndexer) requestDocument(host, resource string) (*goquery.Document, error) {
+	urlString := fmt.Sprintf("https://%v/%v", host, strings.TrimPrefix(resource, "/"))
 	jar, _ := cookiejar.New(nil)
 	u, _ := url.Parse(urlString)
 	jar.SetCookies(u, []*http.Cookie{
@@ -113,6 +133,33 @@ var postURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)/page/([
 var threadURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)")
 var forumURLExpression = regexp.MustCompile("^/forum/view-forum/([0-9]+)")
 
+var monthReplacer = strings.NewReplacer(
+	"ม.ค.", "Jan",
+	"ก.พ.", "Feb",
+	"มี.ค.", "Mar",
+	"เม.ย.", "Apr",
+	"พ.ค.", "May",
+	"มิ.ย.", "Jun",
+	"ก.ค.", "Jul",
+	"ส.ค.", "Aug",
+	"ก.ย.", "Sep",
+	"ต.ค.", "Oct",
+	"พ.ย.", "Nov",
+	"ธ.ค.", "Dec",
+	"janv.", "Jan",
+	"févr.", "Feb",
+	"mars", "Mar",
+	"avril", "Apr",
+	"mai", "May",
+	"juin", "Jun",
+	"juil.", "Jul",
+	"août", "Aug",
+	"sept.", "Sep",
+	"oct.", "Oct",
+	"nov.", "Nov",
+	"déc.", "Dec",
+)
+
 func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumPost, error) {
 	posts := []*ForumPost(nil)
 
@@ -129,12 +176,24 @@ func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumP
 		}
 		post.BodyHTML = body
 
-		text := sel.Find(".post_date").Text()
-		t, err := time.ParseInLocation("Jan _2, 2006 3:04:05 PM", text, timezone)
-		if err != nil {
+		timeText := monthReplacer.Replace(sel.Find(".post_date").Text())
+
+		for _, format := range []string{
+			"Jan _2, 2006 3:04:05 PM",
+			"2/1/2006 15:04:05",
+			"2.1.2006 15:04:05",
+			"_2 Jan 2006, 15:04:05",
+			"_2 Jan 2006 15:04:05",
+		} {
+			if t, err := time.ParseInLocation(format, timeText, timezone); err == nil {
+				post.Time = t
+				break
+			}
+		}
+		if post.Time.IsZero() {
+			log.WithField("text", timeText).Error("unable to parse time")
 			return false
 		}
-		post.Time = t
 
 		sel.Find("a").Each(func(i int, sel *goquery.Selection) {
 			href := sel.AttrOr("href", "")
@@ -165,16 +224,24 @@ func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumP
 	return posts, nil
 }
 
-func (indexer *ForumIndexer) forumPosts(poster string, page int, timezone *time.Location) ([]*ForumPost, error) {
-	doc, err := indexer.requestDocument(fmt.Sprintf("/account/view-posts/%v/page/%v", poster, page))
+func (indexer *ForumIndexer) forumPosts(host, poster string, page int, timezone *time.Location) ([]*ForumPost, error) {
+	doc, err := indexer.requestDocument(host, fmt.Sprintf("/account/view-posts/%v/page/%v", poster, page))
 	if err != nil {
 		return nil, err
 	}
-	return ScrapeForumPosts(doc, timezone)
+	posts, err := ScrapeForumPosts(doc, timezone)
+	if err != nil {
+		return nil, err
+	}
+	for _, post := range posts {
+		post.Host = host
+	}
+	return posts, nil
 }
 
-func (indexer *ForumIndexer) index(poster string, timezone *time.Location) {
+func (indexer *ForumIndexer) index(host, poster string, timezone *time.Location) {
 	logger := log.WithFields(log.Fields{
+		"host":   host,
 		"poster": poster,
 	})
 
@@ -182,7 +249,7 @@ func (indexer *ForumIndexer) index(poster string, timezone *time.Location) {
 	activity := []Activity(nil)
 
 	for page := 1; ; page++ {
-		posts, err := indexer.forumPosts(poster, page, timezone)
+		posts, err := indexer.forumPosts(host, poster, page, timezone)
 		if err != nil {
 			logger.WithError(err).Error("error requesting forum posts")
 		}
@@ -195,9 +262,7 @@ func (indexer *ForumIndexer) index(poster string, timezone *time.Location) {
 			activity = append(activity, post)
 		}
 
-		logger.WithFields(log.Fields{
-			"count": len(posts),
-		}).Info("received forum posts")
+		logger.WithField("count", len(posts)).Info("received forum posts")
 
 		if done {
 			break
@@ -219,7 +284,7 @@ func ScrapeForumTimezone(doc *goquery.Document) (*time.Location, error) {
 }
 
 func (indexer *ForumIndexer) sessionTimezone() (*time.Location, error) {
-	doc, err := indexer.requestDocument("/my-account/preferences")
+	doc, err := indexer.requestDocument("www.pathofexile.com", "/my-account/preferences")
 	if err != nil {
 		return nil, err
 	}
