@@ -10,4 +10,4 @@ RUN dep ensure
 RUN go vet . && go test -v ./... 
 RUN go build .
 
-ENTRYPOINT ["gggtracker"]
+ENTRYPOINT ["./gggtracker"]
