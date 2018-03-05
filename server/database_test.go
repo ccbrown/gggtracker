@@ -34,18 +34,18 @@ func TestDatabase_ForumPosts(t *testing.T) {
 
 	db.AddActivity([]Activity{post1, post2})
 
-	posts, next := db.Activity("", 1)
+	posts, next := db.Activity("", 1, nil)
 	require.Equal(t, 1, len(posts))
 	assert.Equal(t, post1.Id, posts[0].(*ForumPost).Id)
 	assert.Equal(t, post1.Poster, posts[0].(*ForumPost).Poster)
 	assert.Equal(t, post1.Time.Unix(), posts[0].(*ForumPost).Time.Unix())
 
-	posts, next = db.Activity(next, 1)
+	posts, next = db.Activity(next, 1, nil)
 	require.Equal(t, 1, len(posts))
 	assert.Equal(t, post2.Id, posts[0].(*ForumPost).Id)
 	assert.Equal(t, post2.Poster, posts[0].(*ForumPost).Poster)
 	assert.Equal(t, post2.Time.Unix(), posts[0].(*ForumPost).Time.Unix())
 
-	posts, _ = db.Activity(next, 1)
+	posts, _ = db.Activity(next, 1, nil)
 	require.Equal(t, 0, len(posts))
 }

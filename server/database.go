@@ -69,7 +69,7 @@ func (db *Database) AddActivity(activity []Activity) {
 	}
 }
 
-func (db *Database) Activity(start string, count int) ([]Activity, string) {
+func (db *Database) Activity(start string, count int, filter func(Activity) bool) ([]Activity, string) {
 	ret := []Activity(nil)
 	next := ""
 	err := db.db.View(func(tx *bolt.Tx) error {
@@ -88,7 +88,8 @@ func (db *Database) Activity(start string, count int) ([]Activity, string) {
 				}
 			}
 		}
-		for i := 0; i < count && k != nil; i++ {
+		for len(ret) < count && k != nil {
+			var activity Activity
 			switch k[5] {
 			case ForumPostType:
 				post := &ForumPost{}
@@ -96,23 +97,29 @@ func (db *Database) Activity(start string, count int) ([]Activity, string) {
 				if err != nil {
 					return err
 				}
-				ret = append(ret, post)
+				if post.Host == "" {
+					post.Host = "www.pathofexile.com"
+				}
+				activity = post
 			case RedditCommentType:
 				comment := &RedditComment{}
 				err := json.Unmarshal(v, comment)
 				if err != nil {
 					return err
 				}
-				ret = append(ret, comment)
+				activity = comment
 			case RedditPostType:
 				post := &RedditPost{}
 				err := json.Unmarshal(v, post)
 				if err != nil {
 					return err
 				}
-				ret = append(ret, post)
+				activity = post
 			}
-			next = base64.RawURLEncoding.EncodeToString(k)
+			if filter == nil || filter(activity) {
+				ret = append(ret, activity)
+				next = base64.RawURLEncoding.EncodeToString(k)
+			}
 			k, v = c.Prev()
 		}
 		return nil

@@ -37,7 +37,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="icon">').append($('<a>')
-                    .attr('href', 'https://www.pathofexile.com/forum/view-thread/' + activity.thread_id + '/filter-account-type/staff')
+                    .attr('href', 'https://' + activity.host + '/forum/view-thread/' + activity.thread_id + '/filter-account-type/staff')
                     .append($('<img src="static/images/forum-thread.png" />'))
                 ));
             } else if (type == 'reddit_comment') {
@@ -54,7 +54,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.pathofexile.com/forum/view-post/' + activity.id)
+                    .attr('href', 'https://' + activity.host + '/forum/view-post/' + activity.id)
                     .text(activity.thread_title)
                 ));
             } else if (type == "reddit_post") {
@@ -71,7 +71,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="poster">').append($('<a>')
-                    .attr('href', 'https://www.pathofexile.com/account/view-profile/' + encodeURIComponent(activity.poster))
+                    .attr('href', 'https://' + activity.host + '/account/view-profile/' + encodeURIComponent(activity.poster))
                     .text(activity.poster)
                 ));
             } else {
@@ -85,7 +85,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="forum">').append($('<a>')
-                    .attr('href', 'https://www.pathofexile.com/forum/view-forum/' + encodeURIComponent(activity.forum_id))
+                    .attr('href', 'https://' + activity.host + '/forum/view-forum/' + encodeURIComponent(activity.forum_id))
                     .text(activity.forum_name)
                 ));
             } else {
@@ -107,7 +107,7 @@ function loadActivity() {
             $body.find('a').each(function() {
                 var r = $(this).attr('href');
                 if (r && (r.indexOf(':') < 0 || r.indexOf('/') <= r.indexOf(':'))) {
-                    var root = type == 'forum_post' ? 'https://www.pathofexile.com' : 'https://www.reddit.com';
+                    var root = type == 'forum_post' ? 'https://' + activity.host : 'https://www.reddit.com';
                     $(this).attr('href', root + (r[0] == '/' ? '' : '/') + r);
                 }
             });

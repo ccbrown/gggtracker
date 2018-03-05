@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"path"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 

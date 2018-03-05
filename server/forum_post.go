@@ -7,6 +7,7 @@ import (
 
 type ForumPost struct {
 	Id          int       `json:"id"`
+	Host        string    `json:"host"`
 	BodyHTML    string    `json:"body_html"`
 	Time        time.Time `json:"time"`
 	Poster      string    `json:"poster"`
@@ -26,5 +27,5 @@ func (p *ForumPost) ActivityKey() uint32 {
 }
 
 func (p *ForumPost) PostURL() string {
-	return fmt.Sprintf("https://www.pathofexile.com/forum/view-post/%v", p.Id)
+	return fmt.Sprintf("https://%v/forum/view-post/%v", p.Host, p.Id)
 }
