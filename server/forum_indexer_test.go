@@ -21,7 +21,7 @@ func TestScrapeForumPosts(t *testing.T) {
 	tz, err := time.LoadLocation("America/Los_Angeles")
 	require.NoError(t, err)
 
-	posts, err := ScrapeForumPosts(doc, tz)
+	posts, err := ScrapeForumPosts(doc, Locales[0], tz)
 	require.NoError(t, err)
 	assert.Equal(t, 10, len(posts))
 

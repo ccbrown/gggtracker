@@ -243,3 +243,18 @@ td.body img {
 .spoilerTitle, .spoilerContent {
     padding: 8px;
 }
+
+#locale-selection {
+    float: right;
+    list-style: none;
+    margin: 0px;
+}
+
+#locale-selection li {
+    display: inline;
+    opacity: 0.5;
+}
+
+#locale-selection li.selected-locale {
+    opacity: 1.0;
+}

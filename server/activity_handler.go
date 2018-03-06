@@ -16,7 +16,7 @@ type jsonResponse struct {
 
 func ActivityHandler(db *Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		activity, next := db.Activity(c.QueryParam("next"), 50, ActivityFilterForRequest(c.Request()))
+		activity, next := db.Activity(c.QueryParam("next"), 50, LocaleForRequest(c.Request()).ActivityFilter)
 		response := jsonResponse{
 			Next: next,
 		}

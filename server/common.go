@@ -1,6 +1,8 @@
 package server
 
 import (
+	"strings"
+
 	"github.com/labstack/echo"
 )
 
@@ -13,4 +15,17 @@ func AbsoluteURL(c echo.Context, resource string) string {
 		scheme = "https"
 	}
 	return scheme + "://" + c.Request().Host + resource
+}
+
+func SubdomainURL(c echo.Context, subdomain string) string {
+	scheme := c.Scheme()
+	if c.Request().Header.Get(echo.HeaderXForwardedProto) == "https" {
+		scheme = "https"
+	}
+	locale := LocaleForRequest(c.Request())
+	host := strings.TrimPrefix(c.Request().Host, locale.Subdomain+".")
+	if subdomain != "" {
+		host = subdomain + "." + host
+	}
+	return scheme + "://" + host
 }

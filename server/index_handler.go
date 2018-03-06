@@ -11,7 +11,7 @@ var index = `<!DOCTYPE html><html>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>GGG Tracker</title>
     <link rel="shortcut icon" href="static/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="static/style.css?v4" />
+    <link rel="stylesheet" type="text/css" href="static/style.css?v5" />
     <link rel="alternate" type="application/rss+xml" title="GGG Tracker Forum Feed" href="rss" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -34,19 +34,24 @@ var index = `<!DOCTYPE html><html>
     <div class="container">
 		<header>
 			<a href="/"><img src="static/images/ggg-dark.png" /></a>
+			<ul id="locale-selection">
+				{{range .Locales}}
+				<li{{if eq .Subdomain $.Locale.Subdomain}} class="selected-locale"{{end}}><a href="{{call $.SubdomainURL .Subdomain}}"><img src="{{.Image}}" /></a></li>
+				{{end}}
+			</ul>
 		</header>
         <div class="content-box">
-            <h1>Activity</h1>
+            <h1>{{call $.Translate "Activity"}}</h1>
             <a href="rss"><img src="static/images/rss-icon-28.png" class="rss-icon" /></a>
             <table id="activity-table" class="list">
                 <thead>
                     <tr>
                         <th></th>
                         <th></th>
-                        <th>Thread</th>
-                        <th>Poster</th>
-                        <th>Time</th>
-                        <th>Forum</th>
+                        <th>{{call $.Translate "Thread"}}</th>
+                        <th>{{call $.Translate "Poster"}}</th>
+                        <th>{{call $.Translate "Time"}}</th>
+                        <th>{{call $.Translate "Forum"}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,16 +76,33 @@ type IndexConfiguration struct {
 	GoogleAnalytics string
 }
 
-func IndexHandler(configuration IndexConfiguration) echo.HandlerFunc {
+var indexTemplate *template.Template
+
+func init() {
 	t, err := template.New("index").Parse(index)
 	if err != nil {
 		panic(err)
 	}
+	indexTemplate = t
+}
+
+func IndexHandler(configuration IndexConfiguration) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return t.Execute(c.Response(), struct {
+		locale := LocaleForRequest(c.Request())
+		return indexTemplate.Execute(c.Response(), struct {
 			Configuration IndexConfiguration
+			Locales       []*Locale
+			Locale        *Locale
+			Translate     func(string) string
+			SubdomainURL  func(string) string
 		}{
 			Configuration: configuration,
+			Locales:       Locales,
+			Locale:        locale,
+			Translate:     locale.Translate,
+			SubdomainURL: func(subdomain string) string {
+				return SubdomainURL(c, subdomain)
+			},
 		})
 	}
 }

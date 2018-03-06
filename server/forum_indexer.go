@@ -43,16 +43,6 @@ func (indexer *ForumIndexer) Close() {
 func (indexer *ForumIndexer) run() {
 	log.Info("starting forum indexer")
 
-	hosts := []string{
-		"www.pathofexile.com",
-		"br.pathofexile.com",
-		"ru.pathofexile.com",
-		"th.pathofexile.com",
-		"de.pathofexile.com",
-		"fr.pathofexile.com",
-		"es.pathofexile.com",
-	}
-
 	accounts := []string{
 		"Chris", "Jonathan", "Erik", "Mark_GGG", "Samantha", "Rory", "Rhys", "Qarl", "Andrew_GGG",
 		"Damien_GGG", "Joel_GGG", "Ari", "Thomas", "BrianWeissman", "Edwin_GGG", "Support", "Dylan",
@@ -84,10 +74,10 @@ func (indexer *ForumIndexer) run() {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(len(hosts))
+	wg.Add(len(Locales))
 
-	for _, host := range hosts {
-		host := host
+	for _, l := range Locales {
+		l := l
 		go func() {
 			for {
 				for _, account := range accounts {
@@ -95,7 +85,7 @@ func (indexer *ForumIndexer) run() {
 					case <-indexer.closeSignal:
 						return
 					default:
-						indexer.index(host, account, timezone)
+						indexer.index(l, account, timezone)
 						time.Sleep(time.Second)
 					}
 				}
@@ -135,34 +125,7 @@ var postURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)/page/([
 var threadURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)")
 var forumURLExpression = regexp.MustCompile("^/forum/view-forum/([0-9]+)")
 
-var monthReplacer = strings.NewReplacer(
-	"ม.ค.", "Jan",
-	"ก.พ.", "Feb",
-	"มี.ค.", "Mar",
-	"เม.ย.", "Apr",
-	"พ.ค.", "May",
-	"มิ.ย.", "Jun",
-	"ก.ค.", "Jul",
-	"ส.ค.", "Aug",
-	"ก.ย.", "Sep",
-	"ต.ค.", "Oct",
-	"พ.ย.", "Nov",
-	"ธ.ค.", "Dec",
-	"janv.", "Jan",
-	"févr.", "Feb",
-	"mars", "Mar",
-	"avril", "Apr",
-	"mai", "May",
-	"juin", "Jun",
-	"juil.", "Jul",
-	"août", "Aug",
-	"sept.", "Sep",
-	"oct.", "Oct",
-	"nov.", "Nov",
-	"déc.", "Dec",
-)
-
-func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumPost, error) {
+func ScrapeForumPosts(doc *goquery.Document, locale *Locale, timezone *time.Location) ([]*ForumPost, error) {
 	posts := []*ForumPost(nil)
 
 	err := error(nil)
@@ -178,21 +141,9 @@ func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumP
 		}
 		post.BodyHTML = body
 
-		timeText := monthReplacer.Replace(sel.Find(".post_date").Text())
+		timeText := sel.Find(".post_date").Text()
 
-		for _, format := range []string{
-			"Jan _2, 2006 3:04:05 PM",
-			"2/1/2006 15:04:05",
-			"2.1.2006 15:04:05",
-			"_2 Jan 2006, 15:04:05",
-			"_2 Jan 2006 15:04:05",
-		} {
-			if t, err := time.ParseInLocation(format, timeText, timezone); err == nil {
-				post.Time = t
-				break
-			}
-		}
-		if post.Time.IsZero() {
+		if post.Time, err = locale.ParseTime(timeText, timezone); err != nil {
 			log.WithField("text", timeText).Error("unable to parse time")
 			return false
 		}
@@ -226,24 +177,24 @@ func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumP
 	return posts, nil
 }
 
-func (indexer *ForumIndexer) forumPosts(host, poster string, page int, timezone *time.Location) ([]*ForumPost, error) {
-	doc, err := indexer.requestDocument(host, fmt.Sprintf("/account/view-posts/%v/page/%v", poster, page))
+func (indexer *ForumIndexer) forumPosts(locale *Locale, poster string, page int, timezone *time.Location) ([]*ForumPost, error) {
+	doc, err := indexer.requestDocument(locale.ForumHost(), fmt.Sprintf("/account/view-posts/%v/page/%v", poster, page))
 	if err != nil {
 		return nil, err
 	}
-	posts, err := ScrapeForumPosts(doc, timezone)
+	posts, err := ScrapeForumPosts(doc, locale, timezone)
 	if err != nil {
 		return nil, err
 	}
 	for _, post := range posts {
-		post.Host = host
+		post.Host = locale.ForumHost()
 	}
 	return posts, nil
 }
 
-func (indexer *ForumIndexer) index(host, poster string, timezone *time.Location) {
+func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time.Location) {
 	logger := log.WithFields(log.Fields{
-		"host":   host,
+		"host":   locale.ForumHost(),
 		"poster": poster,
 	})
 
@@ -251,7 +202,7 @@ func (indexer *ForumIndexer) index(host, poster string, timezone *time.Location)
 	activity := []Activity(nil)
 
 	for page := 1; ; page++ {
-		posts, err := indexer.forumPosts(host, poster, page, timezone)
+		posts, err := indexer.forumPosts(locale, poster, page, timezone)
 		if err != nil {
 			logger.WithError(err).Error("error requesting forum posts")
 		}
