@@ -85,12 +85,26 @@ var Locales = []*Locale{
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
 			return time.ParseInLocation("2/1/2006 15:04:05", s, tz)
 		},
+		Translations: map[string]string{
+			"Activity": "Atividade",
+			"Thread":   "Discussão",
+			"Poster":   "Autor",
+			"Time":     "Hora",
+			"Forum":    "Fórum",
+		},
 	},
 	{
 		Subdomain: "ru",
 		Image:     "static/images/locales/ru.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
 			return time.ParseInLocation("2.1.2006 15:04:05", s, tz)
+		},
+		Translations: map[string]string{
+			"Activity": "Активность",
+			"Thread":   "Тема",
+			"Poster":   "Автор",
+			"Time":     "Время",
+			"Forum":    "Форум",
 		},
 	},
 	{
@@ -106,6 +120,13 @@ var Locales = []*Locale{
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
 			return time.ParseInLocation("2.1.2006 15:04:05", s, tz)
 		},
+		Translations: map[string]string{
+			"Activity": "Aktivität",
+			"Thread":   "Beitrag",
+			"Poster":   "Verfasser",
+			"Time":     "Datum",
+			"Forum":    "Forum",
+		},
 	},
 	{
 		Subdomain: "fr",
@@ -113,12 +134,26 @@ var Locales = []*Locale{
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
 			return time.ParseInLocation("_2 Jan 2006 15:04:05", frMonthReplacer.Replace(s), tz)
 		},
+		Translations: map[string]string{
+			"Activity": "Activité",
+			"Thread":   "Fil de discussion",
+			"Poster":   "Posteur",
+			"Time":     "Date",
+			"Forum":    "Forum",
+		},
 	},
 	{
 		Subdomain: "es",
 		Image:     "static/images/locales/es.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
 			return time.ParseInLocation("2/1/2006 15:04:05", s, tz)
+		},
+		Translations: map[string]string{
+			"Activity": "Actividad",
+			"Thread":   "Tema",
+			"Poster":   "Autor",
+			"Time":     "Fecha",
+			"Forum":    "Foro",
 		},
 	},
 }
