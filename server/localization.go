@@ -59,7 +59,7 @@ var frMonthReplacer = strings.NewReplacer(
 	"janv.", "Jan",
 	"févr.", "Feb",
 	"mars", "Mar",
-	"avril", "Apr",
+	"avr.", "Apr",
 	"mai", "May",
 	"juin", "Jun",
 	"juil.", "Jul",
