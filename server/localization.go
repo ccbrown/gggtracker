@@ -40,6 +40,36 @@ func (l *Locale) ForumHost() string {
 	return "www.pathofexile.com"
 }
 
+var esMonthReplacer = strings.NewReplacer(
+	"ene", "Jan",
+	"feb", "Feb",
+	"mar", "Mar",
+	"abr", "Apr",
+	"may", "May",
+	"jun", "Jun",
+	"jul", "Jul",
+	"ago", "Aug",
+	"sep", "Sep",
+	"oct", "Oct",
+	"nov", "Nov",
+	"dic", "Dec",
+)
+
+var brMonthReplacer = strings.NewReplacer(
+	"de jan de", "Jan",
+	"de fev de", "Feb",
+	"de mar de", "Mar",
+	"de abr de", "Apr",
+	"de mai de", "May",
+	"de jun de", "Jun",
+	"de jul de", "Jul",
+	"de ago de", "Aug",
+	"de set de", "Sep",
+	"de out de", "Oct",
+	"de nov de", "Nov",
+	"de dez de", "Dec",
+)
+
 var thMonthReplacer = strings.NewReplacer(
 	"ม.ค.", "Jan",
 	"ก.พ.", "Feb",
@@ -70,20 +100,35 @@ var frMonthReplacer = strings.NewReplacer(
 	"déc.", "Dec",
 )
 
+var ruMonthReplacer = strings.NewReplacer(
+	"янв.", "Jan",
+	"февр.", "Feb",
+	"марта", "Mar",
+	"апр.", "Apr",
+	"мая", "May",
+	"июня", "Jun",
+	"июля", "Jul",
+	"авг.", "Aug",
+	"сент.", "Sep",
+	"окт.", "Oct",
+	"нояб.", "Nov",
+	"дек.", "Dec",
+)
+
 // TODO: add translations
 var Locales = []*Locale{
 	{
 		IncludeReddit: true,
 		Image:         "static/images/locales/gb.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("Jan _2, 2006 3:04:05 PM", s, tz)
+			return time.ParseInLocation("Jan _2, 2006, 3:04:05 PM", s, tz)
 		},
 	},
 	{
 		Subdomain: "br",
 		Image:     "static/images/locales/br.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("2/1/2006 15:04:05", s, tz)
+			return time.ParseInLocation("2 Jan 2006 15:04:05", brMonthReplacer.Replace(s), tz)
 		},
 		Translations: map[string]string{
 			"Activity": "Atividade",
@@ -97,7 +142,7 @@ var Locales = []*Locale{
 		Subdomain: "ru",
 		Image:     "static/images/locales/ru.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("2.1.2006 15:04:05", s, tz)
+			return time.ParseInLocation("2 Jan 2006 г., 15:04:05", ruMonthReplacer.Replace(s), tz)
 		},
 		Translations: map[string]string{
 			"Activity": "Активность",
@@ -111,14 +156,14 @@ var Locales = []*Locale{
 		Subdomain: "th",
 		Image:     "static/images/locales/th.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("_2 Jan 2006, 15:04:05", thMonthReplacer.Replace(s), tz)
+			return time.ParseInLocation("_2 Jan 2006 15:04:05", thMonthReplacer.Replace(s), tz)
 		},
 	},
 	{
 		Subdomain: "de",
 		Image:     "static/images/locales/de.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("2.1.2006 15:04:05", s, tz)
+			return time.ParseInLocation("2.1.2006, 15:04:05", s, tz)
 		},
 		Translations: map[string]string{
 			"Activity": "Aktivität",
@@ -146,7 +191,7 @@ var Locales = []*Locale{
 		Subdomain: "es",
 		Image:     "static/images/locales/es.png",
 		ParseTime: func(s string, tz *time.Location) (time.Time, error) {
-			return time.ParseInLocation("2/1/2006 15:04:05", s, tz)
+			return time.ParseInLocation("2 Jan. 2006 15:04:05", esMonthReplacer.Replace(s), tz)
 		},
 		Translations: map[string]string{
 			"Activity": "Actividad",
