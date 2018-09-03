@@ -13,7 +13,6 @@ type ForumPost struct {
 	Poster      string    `json:"poster"`
 	ThreadId    int       `json:"thread_id"`
 	ThreadTitle string    `json:"thread_title"`
-	PageNumber  int       `json:"page_number"`
 	ForumId     int       `json:"forum_id"`
 	ForumName   string    `json:"forum_name"`
 }

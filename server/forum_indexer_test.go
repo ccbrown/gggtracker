@@ -33,7 +33,6 @@ func TestScrapeForumPosts(t *testing.T) {
 	assert.Equal(t, "Chris", p.Poster)
 	assert.Equal(t, "Photos of the Fan Meetup", p.ThreadTitle)
 	assert.Equal(t, "Announcements", p.ForumName)
-	assert.Equal(t, 1, p.PageNumber)
 	assert.Equal(t, "we had a great ti<strong>m</strong>e too!", p.BodyHTML)
 	assert.Equal(t, int64(1486332365), p.Time.Unix())
 }

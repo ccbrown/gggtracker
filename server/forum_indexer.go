@@ -121,7 +121,7 @@ func (indexer *ForumIndexer) requestDocument(host, resource string) (*goquery.Do
 	return goquery.NewDocumentFromReader(resp.Body)
 }
 
-var postURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)/page/([0-9]+)#p([0-9]+)")
+var postURLExpression = regexp.MustCompile("^/forum/view-post/([0-9]+)")
 var threadURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)")
 var forumURLExpression = regexp.MustCompile("^/forum/view-forum/([0-9]+)")
 
@@ -152,12 +152,10 @@ func ScrapeForumPosts(doc *goquery.Document, locale *Locale, timezone *time.Loca
 			href := sel.AttrOr("href", "")
 			if match := postURLExpression.FindStringSubmatch(href); match != nil {
 				n, _ := strconv.Atoi(match[1])
-				post.ThreadId = n
-				n, _ = strconv.Atoi(match[2])
-				post.PageNumber = n
-				n, _ = strconv.Atoi(match[3])
 				post.Id = n
 			} else if match := threadURLExpression.FindStringSubmatch(href); match != nil {
+				n, _ := strconv.Atoi(match[1])
+				post.ThreadId = n
 				post.ThreadTitle = sel.Text()
 			} else if match := forumURLExpression.FindStringSubmatch(href); match != nil {
 				n, _ := strconv.Atoi(match[1])
