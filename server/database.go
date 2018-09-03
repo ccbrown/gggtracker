@@ -100,7 +100,9 @@ func (db *Database) Activity(start string, count int, filter func(Activity) bool
 				if post.Host == "" {
 					post.Host = "www.pathofexile.com"
 				}
-				activity = post
+				if post.Id != 0 {
+					activity = post
+				}
 			case RedditCommentType:
 				comment := &RedditComment{}
 				err := json.Unmarshal(v, comment)
@@ -116,7 +118,7 @@ func (db *Database) Activity(start string, count int, filter func(Activity) bool
 				}
 				activity = post
 			}
-			if filter == nil || filter(activity) {
+			if activity != nil && (filter == nil || filter(activity)) {
 				ret = append(ret, activity)
 				next = base64.RawURLEncoding.EncodeToString(k)
 			}
