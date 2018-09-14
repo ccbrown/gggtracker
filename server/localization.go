@@ -49,7 +49,7 @@ var esMonthReplacer = strings.NewReplacer(
 	"jun", "Jun",
 	"jul", "Jul",
 	"ago", "Aug",
-	"sep", "Sep",
+	"sept", "Sep",
 	"oct", "Oct",
 	"nov", "Nov",
 	"dic", "Dec",
