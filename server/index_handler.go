@@ -88,6 +88,7 @@ func init() {
 
 func IndexHandler(configuration IndexConfiguration) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
 		locale := LocaleForRequest(c.Request())
 		return indexTemplate.Execute(c.Response(), struct {
 			Configuration IndexConfiguration

@@ -7,6 +7,7 @@ RUN wget -O - https://raw.githubusercontent.com/golang/dep/master/install.sh | s
 
 ADD . .
 RUN dep ensure
+RUN go generate ./...
 RUN go vet . && go test -v ./... 
 RUN go build .
 
