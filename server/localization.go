@@ -115,7 +115,6 @@ var ruMonthReplacer = strings.NewReplacer(
 	"дек.", "Dec",
 )
 
-// TODO: add translations
 var Locales = []*Locale{
 	{
 		IncludeReddit: true,

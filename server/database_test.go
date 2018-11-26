@@ -1,9 +1,6 @@
 package server
 
 import (
-	"io/ioutil"
-	"os"
-	"path"
 	"testing"
 	"time"
 
@@ -11,41 +8,46 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestDatabase_ForumPosts(t *testing.T) {
-	dir, err := ioutil.TempDir("testdata", "db")
-	require.NoError(t, err)
-	defer os.RemoveAll(dir)
+func testDatabase(t *testing.T, db Database) {
+	t.Run("ForumPosts", func(t *testing.T) {
+		testDatabase_ForumPosts(t, db)
+	})
+}
 
-	db, err := OpenDatabase(path.Join(dir, "test.db"))
-	require.NoError(t, err)
-	defer db.Close()
+func testDatabase_ForumPosts(t *testing.T, db Database) {
+	locale := Locales[0]
 
 	post1 := &ForumPost{
 		Id:     9000,
 		Poster: "Chris",
 		Time:   time.Unix(1486332365, 0),
+		Host:   locale.ForumHost(),
 	}
 
 	post2 := &ForumPost{
 		Id:     9001,
 		Poster: "Chris",
 		Time:   time.Unix(1486332364, 0),
+		Host:   locale.ForumHost(),
 	}
 
 	db.AddActivity([]Activity{post1, post2})
 
-	posts, next := db.Activity("", 1, nil)
+	posts, next, err := db.Activity(locale, "", 1)
+	require.NoError(t, err)
 	require.Equal(t, 1, len(posts))
 	assert.Equal(t, post1.Id, posts[0].(*ForumPost).Id)
 	assert.Equal(t, post1.Poster, posts[0].(*ForumPost).Poster)
 	assert.Equal(t, post1.Time.Unix(), posts[0].(*ForumPost).Time.Unix())
 
-	posts, next = db.Activity(next, 1, nil)
+	posts, next, err = db.Activity(locale, next, 1)
+	require.NoError(t, err)
 	require.Equal(t, 1, len(posts))
 	assert.Equal(t, post2.Id, posts[0].(*ForumPost).Id)
 	assert.Equal(t, post2.Poster, posts[0].(*ForumPost).Poster)
 	assert.Equal(t, post2.Time.Unix(), posts[0].(*ForumPost).Time.Unix())
 
-	posts, _ = db.Activity(next, 1, nil)
+	posts, _, err = db.Activity(locale, next, 1)
+	require.NoError(t, err)
 	require.Equal(t, 0, len(posts))
 }

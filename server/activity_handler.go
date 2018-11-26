@@ -14,9 +14,12 @@ type jsonResponse struct {
 	Next     string                  `json:"next"`
 }
 
-func ActivityHandler(db *Database) echo.HandlerFunc {
+func ActivityHandler(db Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		activity, next := db.Activity(c.QueryParam("next"), 50, LocaleForRequest(c.Request()).ActivityFilter)
+		activity, next, err := db.Activity(LocaleForRequest(c.Request()), c.QueryParam("next"), 50)
+		if err != nil {
+			return err
+		}
 		response := jsonResponse{
 			Next: next,
 		}

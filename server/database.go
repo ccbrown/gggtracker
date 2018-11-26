@@ -1,39 +1,11 @@
 package server
 
 import (
-	"encoding/base64"
 	"encoding/binary"
-	"encoding/json"
+	"fmt"
 
-	"github.com/boltdb/bolt"
+	json "github.com/json-iterator/go"
 )
-
-type Database struct {
-	db *bolt.DB
-}
-
-func OpenDatabase(path string) (*Database, error) {
-	db, err := bolt.Open(path, 0600, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("activity"))
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	return &Database{
-		db: db,
-	}, nil
-}
-
-func (db *Database) Close() {
-	db.db.Close()
-}
 
 const (
 	ForumPostType = iota
@@ -41,93 +13,59 @@ const (
 	RedditPostType
 )
 
-func (db *Database) AddActivity(activity []Activity) {
-	err := db.db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("activity"))
-		for _, a := range activity {
-			buf, err := json.Marshal(a)
-			if err != nil {
-				return err
-			}
-			k := make([]byte, 10)
-			binary.BigEndian.PutUint64(k, uint64(a.ActivityTime().Unix())<<24)
-			switch a.(type) {
-			case *ForumPost:
-				k[5] = ForumPostType
-			case *RedditComment:
-				k[5] = RedditCommentType
-			case *RedditPost:
-				k[5] = RedditPostType
-			}
-			binary.BigEndian.PutUint32(k[6:], a.ActivityKey())
-			b.Put(k, buf)
-		}
-		return nil
-	})
-	if err != nil {
-		panic(err)
-	}
+type Database interface {
+	AddActivity(activity []Activity) error
+	Activity(locale *Locale, start string, count int) ([]Activity, string, error)
+	Close() error
 }
 
-func (db *Database) Activity(start string, count int, filter func(Activity) bool) ([]Activity, string) {
-	ret := []Activity(nil)
-	next := ""
-	err := db.db.View(func(tx *bolt.Tx) error {
-		c := tx.Bucket([]byte("activity")).Cursor()
-		var k, v []byte
-		if start == "" {
-			k, v = c.Last()
-		} else {
-			s, err := base64.RawURLEncoding.DecodeString(start)
-			if err != nil {
-				k, v = c.Last()
-			} else {
-				k, v = c.Seek(s)
-				if k != nil {
-					k, v = c.Prev()
-				}
-			}
-		}
-		for len(ret) < count && k != nil {
-			var activity Activity
-			switch k[5] {
-			case ForumPostType:
-				post := &ForumPost{}
-				err := json.Unmarshal(v, post)
-				if err != nil {
-					return err
-				}
-				if post.Host == "" {
-					post.Host = "www.pathofexile.com"
-				}
-				if post.Id != 0 {
-					activity = post
-				}
-			case RedditCommentType:
-				comment := &RedditComment{}
-				err := json.Unmarshal(v, comment)
-				if err != nil {
-					return err
-				}
-				activity = comment
-			case RedditPostType:
-				post := &RedditPost{}
-				err := json.Unmarshal(v, post)
-				if err != nil {
-					return err
-				}
-				activity = post
-			}
-			if activity != nil && (filter == nil || filter(activity)) {
-				ret = append(ret, activity)
-				next = base64.RawURLEncoding.EncodeToString(k)
-			}
-			k, v = c.Prev()
-		}
-		return nil
-	})
+func marshalActivity(a Activity) (key, value []byte, err error) {
+	buf, err := json.Marshal(a)
 	if err != nil {
-		panic(err)
+		return nil, nil, err
 	}
-	return ret, next
+	k := make([]byte, 10)
+	binary.BigEndian.PutUint64(k, uint64(a.ActivityTime().Unix())<<24)
+	switch a.(type) {
+	case *ForumPost:
+		k[5] = ForumPostType
+	case *RedditComment:
+		k[5] = RedditCommentType
+	case *RedditPost:
+		k[5] = RedditPostType
+	}
+	binary.BigEndian.PutUint32(k[6:], a.ActivityKey())
+	return k, buf, nil
+}
+
+func unmarshalActivity(key, value []byte) (Activity, error) {
+	switch key[5] {
+	case ForumPostType:
+		post := &ForumPost{}
+		err := json.Unmarshal(value, post)
+		if err != nil {
+			return nil, err
+		}
+		if post.Host == "" {
+			post.Host = "www.pathofexile.com"
+		}
+		if post.Id != 0 {
+			return post, nil
+		}
+	case RedditCommentType:
+		comment := &RedditComment{}
+		err := json.Unmarshal(value, comment)
+		if err != nil {
+			return nil, err
+		}
+		return comment, nil
+	case RedditPostType:
+		post := &RedditPost{}
+		err := json.Unmarshal(value, post)
+		if err != nil {
+			return nil, err
+		}
+		return post, nil
+	}
+	return nil, fmt.Errorf("invalid activity key")
 }

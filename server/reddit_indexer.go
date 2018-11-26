@@ -12,7 +12,7 @@ import (
 )
 
 type RedditIndexerConfiguration struct {
-	Database *Database
+	Database Database
 }
 
 type RedditIndexer struct {
@@ -50,7 +50,9 @@ func (indexer *RedditIndexer) run() {
 		case <-indexer.closeSignal:
 			return
 		default:
-			indexer.index(users[next])
+			if err := indexer.index(users[next]); err != nil {
+				log.WithError(err).Error("error indexing reddit user: " + users[next])
+			}
 			next += 1
 			if next >= len(users) {
 				next = 0
@@ -144,7 +146,7 @@ func (indexer *RedditIndexer) redditActivity(user string, page string) ([]Activi
 	return ParseRedditActivity(body)
 }
 
-func (indexer *RedditIndexer) index(user string) {
+func (indexer *RedditIndexer) index(user string) error {
 	logger := log.WithFields(log.Fields{
 		"user": user,
 	})
@@ -177,7 +179,9 @@ func (indexer *RedditIndexer) index(user string) {
 		time.Sleep(time.Second * 2)
 	}
 
-	if len(activity) > 0 {
-		indexer.configuration.Database.AddActivity(activity)
+	if len(activity) == 0 {
+		return nil
 	}
+
+	return indexer.configuration.Database.AddActivity(activity)
 }
