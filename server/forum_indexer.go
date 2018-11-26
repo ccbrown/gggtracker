@@ -198,7 +198,8 @@ func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time
 		"poster": poster,
 	})
 
-	cutoff := time.Now().Add(time.Hour * -12)
+	pageCutoff := time.Now().Add(-12 * time.Hour)
+	cutoff := time.Now().Add(-14 * 24 * time.Hour)
 	activity := []Activity(nil)
 
 	for page := 1; ; page++ {
@@ -209,13 +210,16 @@ func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time
 
 		done := len(posts) == 0
 		for _, post := range posts {
-			if post.Time.Before(cutoff) {
+			if post.Time.Before(pageCutoff) {
 				done = true
+			}
+			if post.Time.Before(cutoff) {
+				break
 			}
 			activity = append(activity, post)
 		}
 
-		logger.WithField("count", len(posts)).Info("received forum posts")
+		logger.WithField("count", len(activity)).Info("received forum posts")
 
 		if done {
 			break
