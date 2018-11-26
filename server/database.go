@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/binary"
-	"fmt"
 
 	json "github.com/json-iterator/go"
 )
@@ -67,5 +66,5 @@ func unmarshalActivity(key, value []byte) (Activity, error) {
 		}
 		return post, nil
 	}
-	return nil, fmt.Errorf("invalid activity key")
+	return nil, nil
 }

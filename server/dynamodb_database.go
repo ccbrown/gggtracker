@@ -117,11 +117,11 @@ func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int) ([
 			return nil, "", err
 		}
 		for _, item := range result.Items {
-			a, err := unmarshalActivity(item["rk"].B, item["v"].B)
-			if err != nil {
+			if a, err := unmarshalActivity(item["rk"].B, item["v"].B); err != nil {
 				return nil, "", err
+			} else if a != nil {
+				activity = append(activity, a)
 			}
-			activity = append(activity, a)
 		}
 		if result.LastEvaluatedKey == nil {
 			break

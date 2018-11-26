@@ -66,7 +66,7 @@ func (db *BoltDatabase) Activity(locale *Locale, start string, count int) ([]Act
 			activity, err := unmarshalActivity(k, v)
 			if err != nil {
 				return err
-			} else if locale.ActivityFilter(activity) {
+			} else if activity != nil && locale.ActivityFilter(activity) {
 				ret = append(ret, activity)
 				next = base64.RawURLEncoding.EncodeToString(k)
 			}
