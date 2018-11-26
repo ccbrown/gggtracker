@@ -50,6 +50,39 @@ func newDynamoDBTestClient() (*dynamodb.DynamoDB, error) {
 	return client, nil
 }
 
+func createDynamoDBTable(client *dynamodb.DynamoDB, tableName string) error {
+	if _, err := client.CreateTableRequest(&dynamodb.CreateTableInput{
+		AttributeDefinitions: []dynamodb.AttributeDefinition{
+			{
+				AttributeName: aws.String("hk"),
+				AttributeType: dynamodb.ScalarAttributeTypeB,
+			}, {
+				AttributeName: aws.String("rk"),
+				AttributeType: dynamodb.ScalarAttributeTypeB,
+			},
+		},
+		KeySchema: []dynamodb.KeySchemaElement{
+			{
+				AttributeName: aws.String("hk"),
+				KeyType:       dynamodb.KeyTypeHash,
+			}, {
+				AttributeName: aws.String("rk"),
+				KeyType:       dynamodb.KeyTypeRange,
+			},
+		},
+		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(25),
+			WriteCapacityUnits: aws.Int64(25),
+		},
+		TableName: &tableName,
+	}).Send(); err != nil {
+		return err
+	}
+	return client.WaitUntilTableExists(&dynamodb.DescribeTableInput{
+		TableName: aws.String(tableName),
+	})
+}
+
 func TestDynamoDBDatabase(t *testing.T) {
 	client, err := newDynamoDBTestClient()
 	require.NoError(t, err)
@@ -67,7 +100,7 @@ func TestDynamoDBDatabase(t *testing.T) {
 		}))
 	}
 
-	require.NoError(t, CreateDynamoDBTable(client, tableName))
+	require.NoError(t, createDynamoDBTable(client, tableName))
 
 	db, err := NewDynamoDBDatabase(client, tableName)
 	require.NoError(t, err)
