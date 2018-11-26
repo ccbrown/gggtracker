@@ -1,0 +1,15 @@
+version: '3'
+services:
+  build-environment:
+    image: golang:1.11
+    volumes:
+      - ../:/go/src/github.com/ccbrown/gggtracker
+    working_dir: /go/src/github.com/ccbrown/gggtracker/aws-sam
+  lambda-environment:
+    entrypoint: []
+    environment:
+      LD_LIBRARY_PATH: ''
+    image: lambci/lambda:go1.x
+    volumes:
+      - ../:/go/src/github.com/ccbrown/gggtracker
+    working_dir: /go/src/github.com/ccbrown/gggtracker/aws-sam
