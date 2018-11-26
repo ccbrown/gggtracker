@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"strings"
 
+	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	log "github.com/sirupsen/logrus"
@@ -18,17 +21,29 @@ func main() {
 	pflag.IntP("port", "p", 8080, "the port to listen on")
 	pflag.String("staticdir", "./server/static", "the static files to serve")
 	pflag.String("ga", "", "a google analytics account")
-	pflag.String("db", "./gggtracker.db", "the database path")
+	pflag.String("db", "./gggtracker.db", "the database file path")
+	pflag.String("dynamodb-table", "", "if given, DynamoDB will be used instead of a database file")
 	pflag.String("forumsession", "", "the POESESSID cookie for a forum session")
 	viper.BindPFlags(pflag.CommandLine)
 	pflag.Parse()
 
 	viper.SetEnvPrefix("gggtracker")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv()
 
 	e := echo.New()
 
-	db, err := server.OpenDatabase(viper.GetString("db"))
+	var db server.Database
+	var err error
+	if tableName := viper.GetString("dynamodb-table"); tableName != "" {
+		config, err := external.LoadDefaultAWSConfig()
+		if err != nil {
+			log.Fatal(err)
+		}
+		db, err = server.NewDynamoDBDatabase(dynamodb.New(config), tableName)
+	} else {
+		db, err = server.NewBoltDatabase(viper.GetString("db"))
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

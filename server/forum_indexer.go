@@ -23,7 +23,7 @@ type ForumIndexer struct {
 }
 
 type ForumIndexerConfiguration struct {
-	Database *Database
+	Database Database
 	Session  string
 }
 
@@ -85,7 +85,9 @@ func (indexer *ForumIndexer) run() {
 					case <-indexer.closeSignal:
 						return
 					default:
-						indexer.index(l, account, timezone)
+						if err := indexer.index(l, account, timezone); err != nil {
+							log.WithError(err).Error("error indexing forum account: " + account)
+						}
 						time.Sleep(time.Second)
 					}
 				}
@@ -190,7 +192,7 @@ func (indexer *ForumIndexer) forumPosts(locale *Locale, poster string, page int,
 	return posts, nil
 }
 
-func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time.Location) {
+func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time.Location) error {
 	logger := log.WithFields(log.Fields{
 		"host":   locale.ForumHost(),
 		"poster": poster,
@@ -221,9 +223,11 @@ func (indexer *ForumIndexer) index(locale *Locale, poster string, timezone *time
 		time.Sleep(time.Second)
 	}
 
-	if len(activity) > 0 {
-		indexer.configuration.Database.AddActivity(activity)
+	if len(activity) == 0 {
+		return nil
 	}
+
+	return indexer.configuration.Database.AddActivity(activity)
 }
 
 func ScrapeForumTimezone(doc *goquery.Document) (*time.Location, error) {

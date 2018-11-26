@@ -41,9 +41,12 @@ type rssResponse struct {
 	Channel rssChannel `xml:"channel"`
 }
 
-func RSSHandler(db *Database) echo.HandlerFunc {
+func RSSHandler(db Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		activity, _ := db.Activity(c.QueryParam("next"), 50, LocaleForRequest(c.Request()).ActivityFilter)
+		activity, _, err := db.Activity(LocaleForRequest(c.Request()), c.QueryParam("next"), 50)
+		if err != nil {
+			return err
+		}
 		response := rssResponse{
 			Version: "2.0",
 			Atom:    "http://www.w3.org/2005/Atom",
