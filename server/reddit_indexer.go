@@ -57,7 +57,7 @@ func (indexer *RedditIndexer) run() {
 			if next >= len(users) {
 				next = 0
 			}
-			time.Sleep(time.Second * 2)
+			time.Sleep(time.Second * 3)
 		}
 	}
 }
@@ -151,7 +151,8 @@ func (indexer *RedditIndexer) index(user string) error {
 		"user": user,
 	})
 
-	cutoff := time.Now().Add(time.Hour * -12)
+	pageCutoff := time.Now().Add(-12 * time.Hour)
+	cutoff := time.Now().Add(-14 * 24 * time.Hour)
 	activity := []Activity(nil)
 
 	for page := ""; ; {
@@ -163,20 +164,23 @@ func (indexer *RedditIndexer) index(user string) error {
 
 		done := len(things) == 0
 		for _, thing := range things {
-			if thing.ActivityTime().Before(cutoff) {
+			if thing.ActivityTime().Before(pageCutoff) {
 				done = true
+			}
+			if thing.ActivityTime().Before(cutoff) {
+				break
 			}
 			activity = append(activity, thing)
 		}
 
 		logger.WithFields(log.Fields{
-			"count": len(things),
+			"count": len(activity),
 		}).Info("received reddit activity")
 
 		if done {
 			break
 		}
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 3)
 	}
 
 	if len(activity) == 0 {
