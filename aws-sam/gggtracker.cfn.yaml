@@ -82,6 +82,13 @@ Resources:
       DomainName: !Sub es.${DomainName}
       RestApiId: !Ref API
       Stage: !Ref APIStage
+  APIBasePathMappingSubdomain7:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: APISubdomainName7
+    Properties:
+      DomainName: !Sub www.${DomainName}
+      RestApiId: !Ref API
+      Stage: !Ref APIStage
   APICloudWatchRole: 
     Type: AWS::IAM::Role
     Properties: 
@@ -147,6 +154,14 @@ Resources:
     Properties:
       CertificateArn: !Ref CertificateARN
       DomainName: !Sub es.${DomainName}
+      EndpointConfiguration:
+        Types:
+          - EDGE
+  APISubdomainName7:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      CertificateArn: !Ref CertificateARN
+      DomainName: !Sub www.${DomainName}
       EndpointConfiguration:
         Types:
           - EDGE
