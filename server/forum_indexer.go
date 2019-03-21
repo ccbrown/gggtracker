@@ -73,20 +73,6 @@ func (indexer *ForumIndexer) run() {
 	}
 
 	for {
-		for _, locale := range Locales {
-			select {
-			case <-indexer.closeSignal:
-				return
-			default:
-				logger := log.WithField("host", locale.ForumHost())
-				if err := locale.RefreshForumIds(); err != nil {
-					logger.WithError(err).Error("error refreshing forum ids")
-				} else {
-					logger.Info("refreshed forum ids")
-				}
-				time.Sleep(time.Second)
-			}
-		}
 		for _, account := range accounts {
 			select {
 			case <-indexer.closeSignal:

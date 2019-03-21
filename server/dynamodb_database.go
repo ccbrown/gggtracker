@@ -119,7 +119,7 @@ func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int) ([
 		for _, item := range result.Items {
 			if a, err := unmarshalActivity(item["rk"].B, item["v"].B); err != nil {
 				return nil, "", err
-			} else if a != nil {
+			} else if a != nil && locale.ActivityFilter(a) {
 				activity = append(activity, a)
 			}
 		}

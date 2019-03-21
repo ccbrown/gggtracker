@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -52,6 +53,20 @@ func main() {
 	defer redditIndexer.Close()
 
 	if viper.GetString("forumsession") != "" {
+		for _, locale := range server.Locales {
+			for {
+				logger := log.WithField("host", locale.ForumHost())
+				if err := locale.RefreshForumIds(); err != nil {
+					logger.WithError(err).Error("error refreshing forum ids")
+					time.Sleep(5 * time.Second)
+				} else {
+					logger.Info("refreshed forum ids")
+					break
+				}
+			}
+			time.Sleep(time.Second)
+		}
+
 		forumIndexer, err := server.NewForumIndexer(server.ForumIndexerConfiguration{
 			Database: db,
 			Session:  viper.GetString("forumsession"),
@@ -62,6 +77,7 @@ func main() {
 		defer forumIndexer.Close()
 	}
 
-	e := server.New(db, viper.GetString("ga"))
-	log.Fatal(e.Start(fmt.Sprintf(":%v", viper.GetInt("port"))))
+	s := server.New(db, viper.GetString("ga"))
+	defer s.Close()
+	log.Fatal(s.Start(fmt.Sprintf(":%v", viper.GetInt("port"))))
 }

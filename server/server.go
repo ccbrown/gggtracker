@@ -11,6 +11,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 func serveAsset(c echo.Context, path string) error {
@@ -23,7 +24,14 @@ func serveAsset(c echo.Context, path string) error {
 	return nil
 }
 
-func New(db Database, ga string) *echo.Echo {
+type Server struct {
+	*echo.Echo
+
+	close  chan struct{}
+	closed chan struct{}
+}
+
+func New(db Database, ga string) *Server {
 	e := echo.New()
 	e.Use(middleware.Recover())
 
@@ -46,5 +54,43 @@ func New(db Database, ga string) *echo.Echo {
 		return serveAsset(c, filepath.Join("static", path.Clean("/"+p)))
 	})
 
-	return e
+	ret := &Server{
+		Echo:   e,
+		close:  make(chan struct{}),
+		closed: make(chan struct{}),
+	}
+	go ret.run()
+	return ret
+}
+
+func (s *Server) Close() error {
+	close(s.close)
+	<-s.closed
+	return s.Echo.Close()
+}
+
+func (s *Server) run() {
+	defer close(s.closed)
+
+	for {
+		for _, locale := range Locales {
+			select {
+			case <-s.close:
+				return
+			default:
+				logger := log.WithField("host", locale.ForumHost())
+				if err := locale.RefreshForumIds(); err != nil {
+					logger.WithError(err).Error("error refreshing forum ids")
+				} else {
+					logger.Info("refreshed forum ids")
+				}
+				time.Sleep(time.Second)
+			}
+		}
+		select {
+		case <-s.close:
+			return
+		case <-time.After(time.Minute):
+		}
+	}
 }
