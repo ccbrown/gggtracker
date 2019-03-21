@@ -45,9 +45,6 @@ func unmarshalActivity(key, value []byte) (Activity, error) {
 		if err != nil {
 			return nil, err
 		}
-		if post.Host == "" {
-			post.Host = "www.pathofexile.com"
-		}
 		if post.Id != 0 {
 			return post, nil
 		}
