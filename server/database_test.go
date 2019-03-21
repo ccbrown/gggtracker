@@ -21,14 +21,12 @@ func testDatabase_ForumPosts(t *testing.T, db Database) {
 		Id:     9000,
 		Poster: "Chris",
 		Time:   time.Unix(1486332365, 0),
-		Host:   locale.ForumHost(),
 	}
 
 	post2 := &ForumPost{
 		Id:     9001,
 		Poster: "Chris",
 		Time:   time.Unix(1486332364, 0),
-		Host:   locale.ForumHost(),
 	}
 
 	db.AddActivity([]Activity{post1, post2})
