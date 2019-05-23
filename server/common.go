@@ -23,7 +23,8 @@ func SubdomainURL(c echo.Context, subdomain string) string {
 		scheme = "https"
 	}
 	locale := LocaleForRequest(c.Request())
-	host := strings.TrimPrefix(c.Request().Host, locale.Subdomain+".")
+	host := strings.TrimPrefix(c.Request().Host, "www.")
+	host = strings.TrimPrefix(c.Request().Host, locale.Subdomain+".")
 	if subdomain != "" {
 		host = subdomain + "." + host
 	}
