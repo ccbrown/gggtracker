@@ -1,4 +1,5 @@
 *
-!Gopkg.*
 !*.go
 !server/*
+!go.mod
+!go.lock

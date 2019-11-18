@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
 	"os"
@@ -13,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func newDynamoDBTestClient() (*dynamodb.DynamoDB, error) {
+func newDynamoDBTestClient() (*dynamodb.Client, error) {
 	endpoint := os.Getenv("DYNAMODB_ENDPOINT")
 
 	config := defaults.Config()
@@ -41,7 +42,7 @@ func newDynamoDBTestClient() (*dynamodb.DynamoDB, error) {
 
 	client := dynamodb.New(config)
 	if endpoint == "" {
-		if _, err := client.ListTablesRequest(&dynamodb.ListTablesInput{}).Send(); err != nil {
+		if _, err := client.ListTablesRequest(&dynamodb.ListTablesInput{}).Send(context.Background()); err != nil {
 			if err, ok := err.(awserr.Error); ok && err.Code() == "RequestError" {
 				return nil, nil
 			}
@@ -50,7 +51,7 @@ func newDynamoDBTestClient() (*dynamodb.DynamoDB, error) {
 	return client, nil
 }
 
-func createDynamoDBTable(client *dynamodb.DynamoDB, tableName string) error {
+func createDynamoDBTable(client *dynamodb.Client, tableName string) error {
 	if _, err := client.CreateTableRequest(&dynamodb.CreateTableInput{
 		AttributeDefinitions: []dynamodb.AttributeDefinition{
 			{
@@ -75,10 +76,10 @@ func createDynamoDBTable(client *dynamodb.DynamoDB, tableName string) error {
 			WriteCapacityUnits: aws.Int64(25),
 		},
 		TableName: &tableName,
-	}).Send(); err != nil {
+	}).Send(context.Background()); err != nil {
 		return err
 	}
-	return client.WaitUntilTableExists(&dynamodb.DescribeTableInput{
+	return client.WaitUntilTableExists(context.Background(), &dynamodb.DescribeTableInput{
 		TableName: aws.String(tableName),
 	})
 }
@@ -94,8 +95,8 @@ func TestDynamoDBDatabase(t *testing.T) {
 
 	if _, err := client.DeleteTableRequest(&dynamodb.DeleteTableInput{
 		TableName: aws.String(tableName),
-	}).Send(); err == nil {
-		require.NoError(t, client.WaitUntilTableNotExists(&dynamodb.DescribeTableInput{
+	}).Send(context.Background()); err == nil {
+		require.NoError(t, client.WaitUntilTableNotExists(context.Background(), &dynamodb.DescribeTableInput{
 			TableName: aws.String(tableName),
 		}))
 	}
