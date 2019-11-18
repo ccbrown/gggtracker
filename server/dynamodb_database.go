@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/base64"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -8,11 +9,11 @@ import (
 )
 
 type DynamoDBDatabase struct {
-	client    *dynamodb.DynamoDB
+	client    *dynamodb.Client
 	tableName string
 }
 
-func NewDynamoDBDatabase(client *dynamodb.DynamoDB, tableName string) (*DynamoDBDatabase, error) {
+func NewDynamoDBDatabase(client *dynamodb.Client, tableName string) (*DynamoDBDatabase, error) {
 	return &DynamoDBDatabase{
 		client:    client,
 		tableName: tableName,
@@ -68,7 +69,7 @@ func (db *DynamoDBDatabase) AddActivity(activity []Activity) error {
 			for len(unprocessed) > 0 {
 				result, err := db.client.BatchWriteItemRequest(&dynamodb.BatchWriteItemInput{
 					RequestItems: unprocessed,
-				}).Send()
+				}).Send(context.Background())
 				if err != nil {
 					return err
 				}
@@ -112,7 +113,7 @@ func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int) ([
 			ExclusiveStartKey:         startKey,
 			Limit:                     aws.Int64(int64(count - len(activity))),
 			ScanIndexForward:          aws.Bool(false),
-		}).Send()
+		}).Send(context.Background())
 		if err != nil {
 			return nil, "", err
 		}
