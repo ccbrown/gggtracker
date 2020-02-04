@@ -37,11 +37,11 @@ func (indexer *RedditIndexer) run() {
 	log.Info("starting reddit indexer")
 
 	users := []string{
-		"chris_wilson", "Bex_GGG", "Negitivefrags", "Omnitect", "qarldev", "BrianWeissman_GGG",
-		"Mark_GGG", "RhysGGG", "Dan_GGG", "Rory_Rackham", "Blake_GGG", "Fitzy_GGG", "Hartlin_GGG",
-		"Hrishi_GGG", "Baltic_GGG", "KamilOrmanJanowski", "Daniel_GGG", "Jeff_GGG", "NapfelGGG",
-		"Baltic_GGG", "Novynn", "Felipe_GGG", "Mel_GGG", "Sarah_GGG", "riandrake", "Kieren_GGG",
- 		"Openarl", "Natalia_GGG", "pantherNZ", "Stacey_GGG",
+		"chris_wilson", "Bex_GGG", "Negitivefrags", "Omnitect", "BrianWeissman_GGG", "Mark_GGG",
+		"RhysGGG", "Dan_GGG", "Rory_Rackham", "Blake_GGG", "Fitzy_GGG", "Hartlin_GGG", "Hrishi_GGG",
+		"Baltic_GGG", "KamilOrmanJanowski", "Daniel_GGG", "Jeff_GGG", "NapfelGGG", "Baltic_GGG",
+		"Novynn", "Felipe_GGG", "Mel_GGG", "Sarah_GGG", "riandrake", "Kieren_GGG", "Openarl",
+		"Natalia_GGG", "pantherNZ", "Stacey_GGG",
 	}
 	next := 0
 
