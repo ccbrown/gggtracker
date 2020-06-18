@@ -14,7 +14,7 @@ require (
 	github.com/hashicorp/hcl v0.0.0-20171017181929-23c074d0eceb
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 	github.com/json-iterator/go v1.1.5
-	github.com/kevinburke/go-bindata v3.16.0+incompatible // indirect
+	github.com/kevinburke/go-bindata v3.21.0+incompatible // indirect
 	github.com/labstack/echo v3.2.6+incompatible
 	github.com/labstack/gommon v0.2.2-0.20170925052817-57409ada9da0
 	github.com/magiconair/properties v1.7.6

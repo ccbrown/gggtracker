@@ -4,7 +4,6 @@ dist.zip: build
 	zip -j dist.zip build/main
 
 build:
-	dep ensure
 	go generate ../...
 	docker-compose run --rm build-environment make build-environment-build
 	docker-compose run --rm lambda-environment make lambda-environment-build

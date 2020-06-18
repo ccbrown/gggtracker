@@ -1,7 +1,7 @@
 version: '3'
 services:
   build-environment:
-    image: golang:1.11
+    image: golang:1.13
     volumes:
       - ../:/go/src/github.com/ccbrown/gggtracker
     working_dir: /go/src/github.com/ccbrown/gggtracker/aws-sam
