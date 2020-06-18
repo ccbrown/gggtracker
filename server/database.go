@@ -1,7 +1,10 @@
 package server
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/binary"
+	"io/ioutil"
 
 	json "github.com/json-iterator/go"
 )
@@ -18,11 +21,16 @@ type Database interface {
 	Close() error
 }
 
+const gzipMarker = 0
+
 func marshalActivity(a Activity) (key, value []byte, err error) {
-	buf, err := json.Marshal(a)
-	if err != nil {
+	buf := &bytes.Buffer{}
+	buf.Write([]byte{gzipMarker})
+	w := gzip.NewWriter(buf)
+	if err := json.NewEncoder(w).Encode(a); err != nil {
 		return nil, nil, err
 	}
+	w.Close()
 	k := make([]byte, 10)
 	binary.BigEndian.PutUint64(k, uint64(a.ActivityTime().Unix())<<24)
 	switch a.(type) {
@@ -34,10 +42,23 @@ func marshalActivity(a Activity) (key, value []byte, err error) {
 		k[5] = RedditPostType
 	}
 	binary.BigEndian.PutUint32(k[6:], a.ActivityKey())
-	return k, buf, nil
+	return k, buf.Bytes(), nil
 }
 
 func unmarshalActivity(key, value []byte) (Activity, error) {
+	if len(value) > 0 && value[0] == gzipMarker {
+		r, err := gzip.NewReader(bytes.NewReader(value[1:]))
+		if err != nil {
+			return nil, err
+		}
+		defer r.Close()
+		buf, err := ioutil.ReadAll(r)
+		if err != nil {
+			return nil, err
+		}
+		value = buf
+	}
+
 	switch key[5] {
 	case ForumPostType:
 		post := &ForumPost{}
