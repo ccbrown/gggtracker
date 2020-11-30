@@ -162,7 +162,7 @@ func (indexer *RedditIndexer) index(user string) error {
 			logger.WithError(err).Error("error requesting reddit activity")
 		}
 
-		done := len(things) == 0
+		done := len(things) == 0 || next == ""
 		for _, thing := range things {
 			if thing.ActivityTime().Before(pageCutoff) {
 				done = true
