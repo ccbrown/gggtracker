@@ -41,7 +41,8 @@ func (indexer *RedditIndexer) run() {
 		"RhysGGG", "Dan_GGG", "Rory_Rackham", "Blake_GGG", "Fitzy_GGG", "Hartlin_GGG", "Hrishi_GGG",
 		"Baltic_GGG", "KamilOrmanJanowski", "Daniel_GGG", "Jeff_GGG", "NapfelGGG", "Baltic_GGG",
 		"Novynn", "Felipe_GGG", "Mel_GGG", "Sarah_GGG", "riandrake", "Kieren_GGG", "Openarl",
-		"Natalia_GGG", "AlexDenfordGGG", "Stacey_GGG", "ZaccieA", "viperesque", "rach_ggg", "Community_Team", "M59Gar",
+		"Natalia_GGG", "AlexDenfordGGG", "Stacey_GGG", "ZaccieA", "viperesque", "rach_ggg",
+		"Community_Team", "M59Gar", "Dominic_GGG",
 	}
 	next := 0
 
