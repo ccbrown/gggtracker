@@ -16,6 +16,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const UserAgent = "gggtracker.com (github.com/ccbrown/gggtracker)"
+
 type ForumIndexer struct {
 	configuration ForumIndexerConfiguration
 	closeSignal   chan struct{}
@@ -118,7 +120,14 @@ func (indexer *ForumIndexer) requestDocument(resource string) (*goquery.Document
 		Jar:     jar,
 		Timeout: time.Second * 10,
 	}
-	resp, err := client.Get(urlString)
+
+	req, err := http.NewRequest("GET", urlString, nil)
+	req.Header.Set("User-Agent", UserAgent)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
