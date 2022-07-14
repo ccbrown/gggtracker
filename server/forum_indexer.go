@@ -55,6 +55,7 @@ func (indexer *ForumIndexer) run() {
 		"Rachel_GGG", "Rob_GGG", "Roman_GGG", "Sarah_GGG", "SarahB_GGG", "Tom_GGG", "Natalia_GGG",
 		"Jeff_GGG", "Lu_GGG", "JuliaS_GGG", "Alexander_GGG", "SamC_GGG", "AndrewE_GGG", "Kyle_GGG",
 		"Stacey_GGG", "Jatin_GGG", "Yolandi_GGG", "Community_Team",
+		"Dominic_GGG", "Nick_GGG", "Guy_GGG", "Ben_GGG", "BenH_GGG", "Nav_GGG"
 	}
 
 	timezone := (*time.Location)(nil)
