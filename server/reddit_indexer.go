@@ -93,7 +93,7 @@ func ParseRedditActivity(b []byte) ([]Activity, string, error) {
 	}
 
 	for _, thing := range root.Data.Children {
-		if thing.Data.SubredditId != "t5_2sf6m" {
+		if thing.Data.SubredditId != "t5_2sf6m" && thing.Data.SubredditId != "t5_2w3q8" {
 			continue
 		}
 		switch thing.Kind {
