@@ -30,6 +30,7 @@ function loadActivity() {
         for (var i = 0; i < data.activity.length; ++i) {
             var type = data.activity[i].type;
             var activity = data.activity[i].data;
+            var subreddit = activity.subreddit || 'pathofexile';
             var $tr = $('<tr>').addClass(type == 'forum_post' ? 'forum' : 'reddit').addClass(type.replace('/_/', '-'));
 
             var $toggleTD = $('<td class="toggle">');
@@ -42,7 +43,7 @@ function loadActivity() {
                 ));
             } else if (type == 'reddit_comment') {
                 $tr.append($('<td class="icon">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id)
+                    .attr('href', 'https://www.reddit.com/r/' + subreddit + '/comments/' + activity.post_id)
                     .append($('<img src="static/images/snoo.png" />'))
                 ));
             } else {
@@ -64,7 +65,7 @@ function loadActivity() {
                 ));
             } else if (type == "reddit_comment") {
                 $tr.append($('<td class="title">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com/r/pathofexile/comments/' + activity.post_id + '/-/' + activity.id + '/?context=3')
+                    .attr('href', 'https://www.reddit.com/r/' + subreddit + '/comments/' + activity.post_id + '/-/' + activity.id + '/?context=3')
                     .text(activity.post_title)
                 ));
             }
@@ -90,8 +91,8 @@ function loadActivity() {
                 ));
             } else {
                 $tr.append($('<td class="forum">').append($('<a>')
-                    .attr('href', 'https://www.reddit.com/r/pathofexile')
-                    .text('pathofexile')
+                    .attr('href', 'https://www.reddit.com/r/' + subreddit)
+                    .text(subreddit)
                 ));
             }
 

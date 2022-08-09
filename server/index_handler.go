@@ -68,7 +68,7 @@ var index = `<!DOCTYPE html><html>
         </footer>
     </div>
 
-    <script src="static/index.js?v6"></script>
+    <script src="static/index.js?v7"></script>
 </body>
 </html>`
 

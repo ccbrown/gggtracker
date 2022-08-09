@@ -13,6 +13,9 @@ type RedditPost struct {
 	BodyHTML  string    `json:"body_html,omitempty"`
 	Permalink string    `json:"permalink"`
 	Time      time.Time `json:"time"`
+
+	// Added in August 2022. Comments stored before then may not have this.
+	Subreddit string `json:"subreddit"`
 }
 
 func (p *RedditPost) ActivityTime() time.Time {

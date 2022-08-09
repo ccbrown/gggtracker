@@ -83,6 +83,7 @@ func ParseRedditActivity(b []byte) ([]Activity, string, error) {
 					CreatedUTC   float64 `json:"created_utc"`
 					LinkId       string  `json:"link_id"`
 					LinkTitle    string  `json:"link_title"`
+					Subreddit    string  `json:"subreddit"`
 				} `json:"data"`
 			} `json:"children"`
 		} `json:"data"`
@@ -105,6 +106,7 @@ func ParseRedditActivity(b []byte) ([]Activity, string, error) {
 				PostId:    strings.TrimPrefix(thing.Data.LinkId, "t3_"),
 				PostTitle: thing.Data.LinkTitle,
 				Time:      time.Unix(int64(thing.Data.CreatedUTC), 0),
+				Subreddit: thing.Data.Subreddit,
 			})
 		case "t3":
 			activity = append(activity, &RedditPost{
@@ -115,6 +117,7 @@ func ParseRedditActivity(b []byte) ([]Activity, string, error) {
 				Title:     thing.Data.Title,
 				URL:       thing.Data.URL,
 				Time:      time.Unix(int64(thing.Data.CreatedUTC), 0),
+				Subreddit: thing.Data.Subreddit,
 			})
 		}
 	}
