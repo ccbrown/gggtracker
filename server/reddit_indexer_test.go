@@ -30,6 +30,7 @@ func TestParseRedditComments(t *testing.T) {
 	assert.Equal(t, "/r/pathofexile/comments/5q12qc/another_update_on_singapore_fibre_cuts/", post.Permalink)
 	assert.Equal(t, "Another Update on Singapore Fibre Cuts", post.Title)
 	assert.Equal(t, time.Unix(1485316926, 0), post.Time)
+	assert.Equal(t, "pathofexile", post.Subreddit)
 
 	comment, ok := activity[1].(*RedditComment)
 	require.True(t, ok)
@@ -37,4 +38,5 @@ func TestParseRedditComments(t *testing.T) {
 	assert.Equal(t, "5plxw0", comment.PostId)
 	assert.Equal(t, "Development Manifesto: Solo Self-Found Support in 2.6.0", comment.PostTitle)
 	assert.Equal(t, time.Unix(1485287813, 0), comment.Time)
+	assert.Equal(t, "pathofexile", comment.Subreddit)
 }

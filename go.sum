@@ -29,6 +29,8 @@ github.com/kevinburke/go-bindata v3.16.0+incompatible h1:TFzFZop2KxGhqNwsyjgmIh5
 github.com/kevinburke/go-bindata v3.16.0+incompatible/go.mod h1:/pEEZ72flUW2p0yi30bslSp9YqD9pysLxunQDdb2CPM=
 github.com/kevinburke/go-bindata v3.21.0+incompatible h1:baK7hwFJDlAHrOqmE9U3u8tow1Uc5ihN9E/b7djcK2g=
 github.com/kevinburke/go-bindata v3.21.0+incompatible/go.mod h1:/pEEZ72flUW2p0yi30bslSp9YqD9pysLxunQDdb2CPM=
+github.com/kevinburke/go-bindata v3.23.0+incompatible h1:rqNOXZlqrYhMVVAsQx8wuc+LaA73YcfbQ407wAykyS8=
+github.com/kevinburke/go-bindata v3.23.0+incompatible/go.mod h1:/pEEZ72flUW2p0yi30bslSp9YqD9pysLxunQDdb2CPM=
 github.com/labstack/echo v3.2.6+incompatible h1:28U/uXFFKBIP+VQIqq641LuYhMS7Br9ZlwEXERaohCc=
 github.com/labstack/echo v3.2.6+incompatible/go.mod h1:0INS7j/VjnFxD4E2wkz67b8cVwCLbBmJyDaka6Cmk1s=
 github.com/labstack/gommon v0.2.2-0.20170925052817-57409ada9da0 h1:7AIW1qc9sYYTZLamTsRKSmVvJDXkZZrIWXHDK4Gq4X0=

@@ -13,6 +13,9 @@ type RedditComment struct {
 	PostId    string    `json:"post_id"`
 	PostTitle string    `json:"post_title"`
 	Time      time.Time `json:"time"`
+
+	// Added in August 2022. Comments stored before then may not have this.
+	Subreddit string `json:"subreddit"`
 }
 
 func (c *RedditComment) ActivityTime() time.Time {
@@ -25,9 +28,17 @@ func (c *RedditComment) ActivityKey() uint32 {
 }
 
 func (c *RedditComment) PostURL() string {
-	return fmt.Sprintf("https://www.reddit.com/r/pathofexile/comments/%v/", c.PostId)
+	subreddit := "pathofexile"
+	if c.Subreddit != "" {
+		subreddit = c.Subreddit
+	}
+	return fmt.Sprintf("https://www.reddit.com/r/%v/comments/%v/", subreddit, c.PostId)
 }
 
 func (c *RedditComment) CommentURL() string {
-	return fmt.Sprintf("https://www.reddit.com/r/pathofexile/comments/%v/-/%v/?context=3", c.PostId, c.Id)
+	subreddit := "pathofexile"
+	if c.Subreddit != "" {
+		subreddit = c.Subreddit
+	}
+	return fmt.Sprintf("https://www.reddit.com/r/%v/comments/%v/-/%v/?context=3", subreddit, c.PostId, c.Id)
 }
