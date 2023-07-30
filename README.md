@@ -4,7 +4,7 @@ This is the repository for [gggtracker.com](https://gggtracker.com). If there's 
 
 ### Development
 
-If you have Go installed, you can develop and run the server in the usual way: `go get ./... && go generate ./... && go run main.go`
+If you have Go installed, you can develop and run the server in the usual way: `go run main.go`
 
 ![Development](development.gif)
 

@@ -2,4 +2,4 @@
 !*.go
 !server/*
 !go.mod
-!go.lock
+!go.sum

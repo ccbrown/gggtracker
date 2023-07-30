@@ -56,11 +56,22 @@ func (l *Locale) RefreshForumIds() error {
 	client := http.Client{
 		Timeout: time.Second * 10,
 	}
-	resp, err := client.Get(fmt.Sprintf("https://%v/forum", l.ForumHost()))
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://%v/forum", l.ForumHost()), nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("User-Agent", UserAgent)
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status code: %v", resp.StatusCode)
+	}
 
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
