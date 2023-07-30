@@ -1,4 +1,4 @@
-FROM golang:1.13-alpine
+FROM golang:1.20-alpine
 
 WORKDIR /go/src/github.com/ccbrown/gggtracker
 

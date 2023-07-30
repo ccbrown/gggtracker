@@ -1,8 +1,8 @@
-//go:generate sh -c "go get -u github.com/kevinburke/go-bindata/... && `go env GOPATH`/bin/go-bindata -pkg server -ignore '(^|/)\\..*' static/..."
 package server
 
 import (
-	"bytes"
+	"embed"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -13,13 +13,17 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
+//go:embed static/*
+var static embed.FS
+
 func serveAsset(c echo.Context, path string) error {
-	b, err := Asset(path)
+	f, err := static.Open(path)
 	if err != nil {
 		http.NotFound(c.Response(), c.Request())
 		return nil
 	}
-	http.ServeContent(c.Response(), c.Request(), path, time.Time{}, bytes.NewReader(b))
+	defer f.Close()
+	http.ServeContent(c.Response(), c.Request(), path, time.Time{}, f.(io.ReadSeeker))
 	return nil
 }
 
