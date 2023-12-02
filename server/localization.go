@@ -155,6 +155,17 @@ var Locales = []*Locale{
 			"Forum":    "Foro",
 		},
 	},
+	{
+		Subdomain: "jp",
+		Image:     "static/images/locales/jp.png",
+		Translations: map[string]string{
+			"Activity": "活動",
+			"Thread":   "糸",
+			"Poster":   "著者",
+			"Time":     "時間",
+			"Forum":    "フォーラム",
+		},
+	},
 }
 
 func LocaleForRequest(r *http.Request) *Locale {
