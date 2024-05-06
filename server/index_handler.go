@@ -17,16 +17,13 @@ var index = `<!DOCTYPE html><html>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 	{{if .Configuration.GoogleAnalytics}}
-    <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '{{.Configuration.GoogleAnalytics}}']);
-    _gaq.push(['_trackPageview']);
+	<script async src="https://www.googletagmanager.com/gtag/js?id={{.Configuration.GoogleAnalytics}}"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-    (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+		gtag('config', '{{.Configuration.GoogleAnalytics}}');
     </script>
 	{{end}}
 </head>
