@@ -1,2 +1,3 @@
 /build
 /dist.zip
+*-packaged.cfn.yaml
