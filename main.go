@@ -20,6 +20,7 @@ func main() {
 	pflag.String("db", "./gggtracker.db", "the database file path")
 	pflag.String("dynamodb-table", "", "if given, DynamoDB will be used instead of a database file")
 	pflag.String("forumsession", "", "the POESESSID cookie for a forum session")
+	pflag.String("reddit-auth", "", "the APPLICATION:SECRET to use as Reddit auth")
 	viper.BindPFlags(pflag.CommandLine)
 	pflag.Parse()
 
@@ -43,13 +44,16 @@ func main() {
 	}
 	defer db.Close()
 
-	redditIndexer, err := server.NewRedditIndexer(server.RedditIndexerConfiguration{
-		Database: db,
-	})
-	if err != nil {
-		log.Fatal(err)
+	if viper.GetString("reddit-auth") != "" {
+		redditIndexer, err := server.NewRedditIndexer(server.RedditIndexerConfiguration{
+			Database: db,
+			Auth:     viper.GetString("reddit-auth"),
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer redditIndexer.Close()
 	}
-	defer redditIndexer.Close()
 
 	if viper.GetString("forumsession") != "" {
 		forumIndexer, err := server.NewForumIndexer(server.ForumIndexerConfiguration{

@@ -35,6 +35,22 @@ func TestScrapeForumPosts(t *testing.T) {
 	assert.Equal(t, "Announcements", p.ForumName)
 	assert.Equal(t, "we had a great ti<strong>m</strong>e too!", p.BodyHTML)
 	assert.Equal(t, int64(1486332365), p.Time.Unix())
+
+	t.Run("LoggedOut", func(t *testing.T) {
+		f, err := os.Open("testdata/forum-posts-logged-out.html")
+		require.NoError(t, err)
+		defer f.Close()
+
+		doc, err := goquery.NewDocumentFromReader(f)
+		require.NoError(t, err)
+
+		tz, err := time.LoadLocation("America/Los_Angeles")
+		require.NoError(t, err)
+
+		posts, err := ScrapeForumPosts(doc, tz)
+		require.Error(t, err)
+		assert.Equal(t, 0, len(posts))
+	})
 }
 
 func TestScrapeForumTimezone(t *testing.T) {

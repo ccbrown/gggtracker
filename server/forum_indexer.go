@@ -147,6 +147,10 @@ func ScrapeForumPosts(doc *goquery.Document, timezone *time.Location) ([]*ForumP
 
 	err := error(nil)
 
+	if doc.Find(".forumPostListTable").Length() == 0 {
+		return nil, errors.New("forum post list not found")
+	}
+
 	doc.Find(".forumPostListTable > tbody > tr").EachWithBreak(func(i int, sel *goquery.Selection) bool {
 		post := &ForumPost{
 			Poster: sel.Find(".post_by_account").Text(),

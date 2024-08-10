@@ -13,6 +13,7 @@ import (
 
 type RedditIndexerConfiguration struct {
 	Database Database
+	Auth     string
 }
 
 type RedditIndexer struct {
@@ -32,6 +33,8 @@ func NewRedditIndexer(configuration RedditIndexerConfiguration) (*RedditIndexer,
 func (indexer *RedditIndexer) Close() {
 	indexer.closeSignal <- true
 }
+
+const redditRequestInterval = time.Second * 8
 
 func (indexer *RedditIndexer) run() {
 	log.Info("starting reddit indexer")
@@ -58,7 +61,7 @@ func (indexer *RedditIndexer) run() {
 			if next >= len(users) {
 				next = 0
 			}
-			time.Sleep(time.Second * 3)
+			time.Sleep(redditRequestInterval)
 		}
 	}
 }
@@ -136,6 +139,9 @@ func (indexer *RedditIndexer) redditActivity(user string, page string) ([]Activi
 		return nil, "", err
 	}
 	req.Header.Add("User-Agent", "GGG Tracker (https://github.com/ccbrown/gggtracker) by /u/rz2yoj")
+	if parts := strings.Split(indexer.configuration.Auth, ":"); len(parts) == 2 {
+		req.SetBasicAuth(parts[0], parts[1])
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -184,7 +190,7 @@ func (indexer *RedditIndexer) index(user string) error {
 		if done {
 			break
 		}
-		time.Sleep(time.Second * 3)
+		time.Sleep(redditRequestInterval)
 	}
 
 	if len(activity) == 0 {
