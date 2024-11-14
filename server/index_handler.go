@@ -37,6 +37,10 @@ var index = `<!DOCTYPE html><html>
 				{{end}}
 			</ul>
 		</header>
+		<div class="notice">
+		<p>Tala moana, warrior! This website is approaching its <strong>12th</strong> birthday! If you've found it useful over the years, you can now show your appreciation in the form of a <a href="https://github.com/sponsors/ccbrown" target="_blank">recurring or one-time donation on GitHub</a>! In addition to showing your appreciation, this offsets server costs and helps support further feature developments (Twitter/X support? Search? GenAI?).</p>
+		<p>Thanks, and stay safe out there, Exile. ❤️</p>
+		</div>
         <div class="content-box">
             <h1>{{call $.Translate "Activity"}}</h1>
             <a href="rss"><img src="static/images/rss-icon-28.png" class="rss-icon" /></a>
@@ -61,6 +65,9 @@ var index = `<!DOCTYPE html><html>
 			<p>
 				Please direct feedback to <a href="https://www.pathofexile.com/forum/view-thread/69448" target="_blank">this thread</a>.
 				Want a new feature? <a href="https://github.com/ccbrown/gggtracker" target="_blank">Add it yourself!</a>
+			</p>
+			<p>
+				Appreciate the site? Show your support by <a href="https://github.com/sponsors/ccbrown" target="_blank">sponsoring me</a>! ❤️
 			</p>
         </footer>
     </div>

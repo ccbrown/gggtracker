@@ -1,6 +1,6 @@
 a {
 	color: #C9BA8A;
-    text-decoration: none;
+	text-decoration: none;
 }
 
 a:hover {
@@ -50,6 +50,23 @@ td {
 
 .right {
 	text-align: right;
+}
+
+div.notice {
+	background-color: #DFCF99;
+	padding: 0px 12px;
+	margin: 24px;
+	border: 1px solid #363636;
+	box-shadow: 3px 3px 16px 4px #000000;
+	width: 980px;
+	position: relative;
+	font-size: 14px;
+	color: #202020;
+}
+
+div.notice a, div.notice a:visited, div.notice a:active, div.notice a:hover {
+	color: #202020;
+	text-decoration: underline;
 }
 
 div.content-box {
@@ -107,11 +124,11 @@ footer {
 }
 
 footer a {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 td.poster {
-    text-align: center;
+	text-align: center;
 }
 
 .forum td.poster a {
@@ -126,7 +143,7 @@ td.poster {
 }
 
 .reddit td.poster a {
-    color: #f33f3f;
+	color: #f33f3f;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -137,124 +154,124 @@ td.poster {
 }
 
 .reddit td {
-    background-color: #07192c;
+	background-color: #07192c;
 }
 
 td.toggle {
-    padding: 0px;
-    width: 34px;
-    height: 34px;
+	padding: 0px;
+	width: 34px;
+	height: 34px;
 }
 
 td.time {
-    width: 200px;
-    text-align: center;
+	width: 200px;
+	text-align: center;
 }
 
 td.forum {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    max-width: 140px;
-    text-align: center;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	max-width: 140px;
+	text-align: center;
 }
 
 .reddit .forum a::before {
-    content: '/r/';
+	content: '/r/';
 }
 
 td.toggle {
-    position: relative;
-    padding: 0px;
+	position: relative;
+	padding: 0px;
 }
 
 td.toggle img {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    filter: opacity(70%);
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	filter: opacity(70%);
 }
 
 .expander:hover, .collapser:hover {
-    filter: opacity(100%);
+	filter: opacity(100%);
 }
 
 td.icon {
-    position: relative;
-    padding: 0px;
-    width: 35px;
+	position: relative;
+	padding: 0px;
+	width: 35px;
 }
 
 td.icon img {
-    position: absolute;
-    height: 24px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	position: absolute;
+	height: 24px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 td.title {
-    max-width: 450px;
-    overflow: hidden;
+	max-width: 450px;
+	overflow: hidden;
 }
 
 td.body {
-    background-color: #262626;
-    padding: 10px;
+	background-color: #262626;
+	padding: 10px;
 }
 
 td.body blockquote {
-    background: #323232;
-    border-left: 5px solid #1a1a1a;
-    margin: 1.5em 10px;
-    padding: 0.5em 10px;
+	background: #323232;
+	border-left: 5px solid #1a1a1a;
+	margin: 1.5em 10px;
+	padding: 0.5em 10px;
 }
 
 td.body img {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 .spoilerHidden .spoilerContent {
-    display: none;
+	display: none;
 }
 
 .spoilerTitle input[type="button"] {
-    margin-left: 8px;
-    color: #c9ba8a;
-    background-color: #0f0f0f;
-    border: 0;
-    cursor: pointer;
-    text-decoration: none;
+	margin-left: 8px;
+	color: #c9ba8a;
+	background-color: #0f0f0f;
+	border: 0;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 .spoilerTitle input[type="button"]:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .spoiler {
-    border: 1px solid #1a1a1a;
-    background-color: #323232;
+	border: 1px solid #1a1a1a;
+	background-color: #323232;
 }
 
 .spoilerTitle, .spoilerContent {
-    padding: 8px;
+	padding: 8px;
 }
 
 #locale-selection {
-    float: right;
-    list-style: none;
-    margin: 0px;
+	float: right;
+	list-style: none;
+	margin: 0px;
 }
 
 #locale-selection li {
-    display: inline;
-    opacity: 0.5;
+	display: inline;
+	opacity: 0.5;
 }
 
 #locale-selection li.selected-locale {
-    opacity: 1.0;
+	opacity: 1.0;
 }
