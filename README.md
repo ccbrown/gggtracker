@@ -1,4 +1,4 @@
-# Welcome! [![Build Status](https://travis-ci.org/ccbrown/gggtracker.svg?branch=master)](https://travis-ci.org/ccbrown/gggtracker)
+# Welcome! ![Build Status](https://github.com/ccbrown/gggtracker/actions/workflows/push.yml/badge.svg)
 
 This is the repository for [gggtracker.com](https://gggtracker.com). If there's something you think the site is missing, please either a.) open an issue to request the feature or b.) develop the feature yourself and put in a pull request.
 
