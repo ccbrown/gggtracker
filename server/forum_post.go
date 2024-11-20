@@ -7,39 +7,42 @@ import (
 )
 
 type ForumPost struct {
-	Id          int       `json:"id"`
-	BodyHTML    string    `json:"body_html"`
-	Time        time.Time `json:"time"`
-	Poster      string    `json:"poster"`
-	ThreadId    int       `json:"thread_id"`
-	ThreadTitle string    `json:"thread_title"`
-	ForumId     int       `json:"forum_id"`
-	ForumName   string    `json:"forum_name"`
+	Id                  int       `json:"id"`
+	BodyHTML            string    `json:"body_html"`
+	Time                time.Time `json:"time"`
+	Poster              string    `json:"poster"`
+	PosterDiscriminator int       `json:"poster_discriminator"`
+	ThreadId            int       `json:"thread_id"`
+	ThreadTitle         string    `json:"thread_title"`
+	ForumId             int       `json:"forum_id"`
+	ForumName           string    `json:"forum_name"`
 }
 
 type forumPostWithHost struct {
-	Id          int       `json:"id"`
-	BodyHTML    string    `json:"body_html"`
-	Time        time.Time `json:"time"`
-	Poster      string    `json:"poster"`
-	ThreadId    int       `json:"thread_id"`
-	ThreadTitle string    `json:"thread_title"`
-	ForumId     int       `json:"forum_id"`
-	ForumName   string    `json:"forum_name"`
-	Host        string    `json:"host"`
+	Id                  int       `json:"id"`
+	BodyHTML            string    `json:"body_html"`
+	Time                time.Time `json:"time"`
+	Poster              string    `json:"poster"`
+	PosterDiscriminator int       `json:"poster_discriminator"`
+	ThreadId            int       `json:"thread_id"`
+	ThreadTitle         string    `json:"thread_title"`
+	ForumId             int       `json:"forum_id"`
+	ForumName           string    `json:"forum_name"`
+	Host                string    `json:"host"`
 }
 
 func (p ForumPost) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&forumPostWithHost{
-		Id:          p.Id,
-		BodyHTML:    p.BodyHTML,
-		Time:        p.Time,
-		Poster:      p.Poster,
-		ThreadId:    p.ThreadId,
-		ThreadTitle: p.ThreadTitle,
-		ForumId:     p.ForumId,
-		ForumName:   p.ForumName,
-		Host:        p.Host(),
+		Id:                  p.Id,
+		BodyHTML:            p.BodyHTML,
+		Time:                p.Time,
+		Poster:              p.Poster,
+		PosterDiscriminator: p.PosterDiscriminator,
+		ThreadId:            p.ThreadId,
+		ThreadTitle:         p.ThreadTitle,
+		ForumId:             p.ForumId,
+		ForumName:           p.ForumName,
+		Host:                p.Host(),
 	})
 }
 

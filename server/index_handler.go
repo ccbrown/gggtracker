@@ -72,7 +72,7 @@ var index = `<!DOCTYPE html><html>
         </footer>
     </div>
 
-    <script src="static/index.js?v7"></script>
+    <script src="static/index.js?v8"></script>
 </body>
 </html>`
 

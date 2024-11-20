@@ -21,7 +21,8 @@ func TestScrapeForumPosts(t *testing.T) {
 	tz, err := time.LoadLocation("America/Los_Angeles")
 	require.NoError(t, err)
 
-	posts, err := ScrapeForumPosts(doc, tz)
+	poster := ForumAccount{Username: "Chris"}
+	posts, err := ScrapeForumPosts(doc, poster, tz)
 	require.NoError(t, err)
 	assert.Equal(t, 10, len(posts))
 
@@ -31,6 +32,7 @@ func TestScrapeForumPosts(t *testing.T) {
 	assert.Equal(t, 54, p.ForumId)
 	assert.Equal(t, 1830139, p.ThreadId)
 	assert.Equal(t, "Chris", p.Poster)
+	assert.Equal(t, 0, p.PosterDiscriminator)
 	assert.Equal(t, "Photos of the Fan Meetup", p.ThreadTitle)
 	assert.Equal(t, "Announcements", p.ForumName)
 	assert.Equal(t, "we had a great ti<strong>m</strong>e too!", p.BodyHTML)
@@ -47,7 +49,7 @@ func TestScrapeForumPosts(t *testing.T) {
 		tz, err := time.LoadLocation("America/Los_Angeles")
 		require.NoError(t, err)
 
-		posts, err := ScrapeForumPosts(doc, tz)
+		posts, err := ScrapeForumPosts(doc, poster, tz)
 		require.Error(t, err)
 		assert.Equal(t, 0, len(posts))
 	})

@@ -72,7 +72,7 @@ function loadActivity() {
 
             if (type == 'forum_post') {
                 $tr.append($('<td class="poster">').append($('<a>')
-                    .attr('href', 'https://' + activity.host + '/account/view-profile/' + encodeURIComponent(activity.poster))
+                    .attr('href', 'https://' + activity.host + '/account/view-profile/' + encodeURIComponent(activity.poster) + '-' + String(activity.poster_discriminator || 0).padStart(4, '0'))
                     .text(activity.poster)
                 ));
             } else {
