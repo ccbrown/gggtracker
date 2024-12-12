@@ -169,7 +169,12 @@ func (indexer *ForumIndexer) run() {
 				return
 			default:
 				if err := indexer.index(account, timezone); err != nil {
-					log.WithError(err).Error("error indexing forum account: " + account.Username)
+					if errors.Is(err, ErrForumMaintenance) {
+						log.Info("forum is under maintenance")
+						time.Sleep(30 * time.Second)
+					} else {
+						log.WithError(err).Error("error indexing forum account: " + account.Username)
+					}
 				}
 				time.Sleep(time.Second)
 			}
@@ -213,13 +218,19 @@ var postURLExpression = regexp.MustCompile("^/forum/view-post/([0-9]+)")
 var threadURLExpression = regexp.MustCompile("^/forum/view-thread/([0-9]+)")
 var forumURLExpression = regexp.MustCompile("^/forum/view-forum/([0-9]+)")
 
+var ErrForumMaintenance = errors.New("forum is in maintenance")
+
 func ScrapeForumPosts(doc *goquery.Document, poster ForumAccount, timezone *time.Location) ([]*ForumPost, error) {
 	posts := []*ForumPost(nil)
 
 	err := error(nil)
 
 	if doc.Find(".forumPostListTable").Length() == 0 {
-		return nil, errors.New("forum post list not found")
+		err = errors.New("forum post list not found")
+		if topBar := doc.Find(".topBar"); topBar.Length() == 1 && topBar.Text() == "Down For Maintenance" {
+			err = ErrForumMaintenance
+		}
+		return nil, err
 	}
 
 	doc.Find(".forumPostListTable > tbody > tr").EachWithBreak(func(i int, sel *goquery.Selection) bool {
@@ -292,7 +303,7 @@ func (indexer *ForumIndexer) index(poster ForumAccount, timezone *time.Location)
 	for page := 1; ; page++ {
 		posts, err := indexer.forumPosts(poster, page, timezone)
 		if err != nil {
-			logger.WithError(err).Error("error requesting forum posts")
+			return fmt.Errorf("error getting forum posts: %w", err)
 		}
 
 		done := len(posts) == 0

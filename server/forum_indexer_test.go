@@ -53,6 +53,22 @@ func TestScrapeForumPosts(t *testing.T) {
 		require.Error(t, err)
 		assert.Equal(t, 0, len(posts))
 	})
+
+	t.Run("Maintenance", func(t *testing.T) {
+		f, err := os.Open("testdata/forum-maintenance.html")
+		require.NoError(t, err)
+		defer f.Close()
+
+		doc, err := goquery.NewDocumentFromReader(f)
+		require.NoError(t, err)
+
+		tz, err := time.LoadLocation("America/Los_Angeles")
+		require.NoError(t, err)
+
+		posts, err := ScrapeForumPosts(doc, poster, tz)
+		assert.Equal(t, err, ErrForumMaintenance)
+		assert.Equal(t, 0, len(posts))
+	})
 }
 
 func TestScrapeForumTimezone(t *testing.T) {
