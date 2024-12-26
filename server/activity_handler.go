@@ -50,6 +50,19 @@ const MaxDbRequests = 10
 func fetchActivity(db Database, locale *Locale, start string, nohelp bool) ([]Activity, string, error) {
 	activity := []Activity{}
 	next := start
+	pred := func(a Activity) bool {
+		return true
+	}
+	if nohelp {
+		pred = func(a Activity) bool {
+			if fp, ok := a.(*ForumPost); ok {
+				if fp.ForumId == locale.HelpForumId {
+					return false
+				}
+			}
+			return true
+		}
+	}
 	for i := 0; i < MaxDbRequests && len(activity) < MinPageSize; i++ {
 		as, n, err := db.Activity(locale, next, DbRequestSize)
 		if err != nil {
@@ -60,24 +73,18 @@ func fetchActivity(db Database, locale *Locale, start string, nohelp bool) ([]Ac
 			log.Debug("end of activity db")
 			break
 		}
-		skipped := 0
-		if nohelp {
-			for _, a := range as {
-				if fp, ok := a.(*ForumPost); ok {
-					if fp.ForumId == locale.HelpForumId {
-						skipped++
-						continue
-					}
-				}
+		filtered := 0
+		for _, a := range as {
+			if pred(a) {
 				activity = append(activity, a)
+			} else {
+				filtered++
 			}
-		} else {
-			activity = append(activity, as...)
 		}
 		log.WithFields(log.Fields{
 			"count":    len(as),
 			"buffered": len(activity),
-			"skipped":  skipped,
+			"filtered": filtered,
 			"next":     next,
 		}).Debug("processed activity batch")
 	}
