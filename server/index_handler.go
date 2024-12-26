@@ -58,7 +58,7 @@ var index = `<!DOCTYPE html><html>
                 <tbody>
                 </tbody>
             </table>
-            <div id="activity-nav" class="right"></div>
+            <div id="activity-nav"></div>
         </div>
         <footer>
             <p>This site is not affiliated with Path of Exile or Grinding Gear Games in any way.</p>

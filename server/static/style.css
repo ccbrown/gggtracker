@@ -48,8 +48,9 @@ td {
 	border-bottom: 1px solid #363636;
 }
 
-.right {
-	text-align: right;
+#activity-nav {
+	display: flex;
+	justify-content: space-between;
 }
 
 div.notice {

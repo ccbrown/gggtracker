@@ -17,6 +17,7 @@ type Locale struct {
 	IncludeReddit bool
 	Translations  map[string]string
 	ParseTime     func(s string, tz *time.Location) (time.Time, error)
+	HelpForumId   int
 
 	forumIds atomic.Value
 }
@@ -95,6 +96,7 @@ var Locales = []*Locale{
 	{
 		IncludeReddit: true,
 		Image:         "static/images/locales/gb.png",
+		HelpForumId:   584,
 	},
 	{
 		Subdomain: "br",
@@ -106,6 +108,7 @@ var Locales = []*Locale{
 			"Time":     "Hora",
 			"Forum":    "Fórum",
 		},
+		HelpForumId: 774,
 	},
 	{
 		Subdomain: "ru",
@@ -119,8 +122,9 @@ var Locales = []*Locale{
 		},
 	},
 	{
-		Subdomain: "th",
-		Image:     "static/images/locales/th.png",
+		Subdomain:   "th",
+		Image:       "static/images/locales/th.png",
+		HelpForumId: 1011,
 	},
 	{
 		Subdomain: "de",
@@ -132,6 +136,7 @@ var Locales = []*Locale{
 			"Time":     "Datum",
 			"Forum":    "Forum",
 		},
+		HelpForumId: 1123,
 	},
 	{
 		Subdomain: "fr",
@@ -143,6 +148,7 @@ var Locales = []*Locale{
 			"Time":     "Date",
 			"Forum":    "Forum",
 		},
+		HelpForumId: 1051,
 	},
 	{
 		Subdomain: "es",
@@ -154,6 +160,7 @@ var Locales = []*Locale{
 			"Time":     "Fecha",
 			"Forum":    "Foro",
 		},
+		HelpForumId: 1193,
 	},
 	{
 		Subdomain: "jp",

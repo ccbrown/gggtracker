@@ -16,14 +16,16 @@ var POE = {
 };
 
 function loadActivity() {
-    var page = location.hash.replace(/^#page=/, '');
+    var params = new URLSearchParams(location.hash.replace(/^#/, ''));
+    var page = params.get('page') || '';
+    var nohelp = params.get('nohelp') || '';
     if (currentPage !== undefined && page == currentPage) {
         return;
     }
     var previousPage = currentPage;
     currentPage = page;
 
-    $.get('activity.json?next=' + page, function(data) {
+    $.get('activity.json?next=' + page + '&nohelp=' + nohelp, function(data) {
         var $tbody = $('#activity-table tbody');
         $tbody.empty();
 
@@ -135,7 +137,23 @@ function loadActivity() {
             $tbody.append($tr);
         }
 
-        $('#activity-nav').empty().append($('<a>').text('Next Page').attr('href', '#page=' + data.next).click(function() {
+        var activityNav = $('#activity-nav').empty();
+
+        var nohelpText;
+        var nohelpHref;
+        if (nohelp != 'true') {
+            nohelpText = 'Hide Help Forum';
+            nohelpHref = '#page=' + page + '&nohelp=true';
+        } else {
+            nohelpText = 'Show Help Forum';
+            nohelpHref = '#page=' + page + '&nohelp=false';
+        }
+        activityNav.append($('<a>').text(nohelpText).attr('href', nohelpHref).click(function() {
+            currentPage = undefined;
+            window.scrollTo(0, 0);
+        }));
+
+        activityNav.append($('<a>').text('Next Page').attr('href', '#page=' + data.next + '&nohelp=' + nohelp).click(function() {
             window.scrollTo(0, 0);
         }));
     }).fail(function() {
