@@ -82,7 +82,7 @@ func (db *DynamoDBDatabase) AddActivity(activity []Activity) error {
 	return nil
 }
 
-func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int) ([]Activity, string, error) {
+func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int, filter func(a Activity) bool) ([]Activity, string, error) {
 	var activity []Activity
 
 	var startKey map[string]dynamodb.AttributeValue
@@ -120,7 +120,7 @@ func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int) ([
 		for _, item := range result.Items {
 			if a, err := unmarshalActivity(item["rk"].B, item["v"].B); err != nil {
 				return nil, "", err
-			} else if a != nil {
+			} else if a != nil && filter(a) {
 				activity = append(activity, a)
 			}
 		}

@@ -17,7 +17,7 @@ const (
 
 type Database interface {
 	AddActivity(activity []Activity) error
-	Activity(locale *Locale, start string, count int) ([]Activity, string, error)
+	Activity(locale *Locale, start string, count int, filter func(a Activity) bool) ([]Activity, string, error)
 	Close() error
 }
 

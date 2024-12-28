@@ -43,7 +43,7 @@ type rssResponse struct {
 
 func RSSHandler(db Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		activity, _, err := db.Activity(LocaleForRequest(c.Request()), c.QueryParam("next"), 50)
+		activity, _, err := db.Activity(LocaleForRequest(c.Request()), c.QueryParam("next"), 50, func(a Activity) bool { return true })
 		if err != nil {
 			return err
 		}
