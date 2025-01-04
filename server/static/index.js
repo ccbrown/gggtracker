@@ -25,6 +25,10 @@ function loadActivity() {
     var previousPage = currentPage;
     currentPage = page;
 
+    if (nohelp == 'true') {
+        $('#activity-table tbody').empty().append($('<tr>').append($('<td>').attr('colspan', 6).text('Loading...')))
+    }
+
     $.get('activity.json?next=' + page + '&nohelp=' + nohelp, function(data) {
         var $tbody = $('#activity-table tbody');
         $tbody.empty();
