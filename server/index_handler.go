@@ -43,6 +43,7 @@ var index = `<!DOCTYPE html><html>
 		</div>
         <div class="content-box">
             <h1>{{call $.Translate "Activity"}}</h1>
+			<div id="help-toggle"></div>
             <a href="rss"><img src="static/images/rss-icon-28.png" class="rss-icon" /></a>
             <table id="activity-table" class="list">
                 <thead>

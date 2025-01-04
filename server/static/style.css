@@ -65,7 +65,10 @@ div.notice {
 	color: #202020;
 }
 
-div.notice a, div.notice a:visited, div.notice a:active, div.notice a:hover {
+div.notice a,
+div.notice a:visited,
+div.notice a:active,
+div.notice a:hover {
 	color: #202020;
 	text-decoration: underline;
 }
@@ -98,6 +101,12 @@ div.container {
 
 .rss-icon:hover {
 	opacity: 1.0;
+}
+
+#help-toggle {
+	position: absolute;
+	top: 24px;
+	right: 50px;
 }
 
 div.content-box h1 {
@@ -197,7 +206,8 @@ td.toggle img {
 	filter: opacity(70%);
 }
 
-.expander:hover, .collapser:hover {
+.expander:hover,
+.collapser:hover {
 	filter: opacity(100%);
 }
 
@@ -258,7 +268,8 @@ td.body img {
 	background-color: #323232;
 }
 
-.spoilerTitle, .spoilerContent {
+.spoilerTitle,
+.spoilerContent {
 	padding: 8px;
 }
 

@@ -137,8 +137,6 @@ function loadActivity() {
             $tbody.append($tr);
         }
 
-        var activityNav = $('#activity-nav').empty();
-
         var nohelpText;
         var nohelpHref;
         if (nohelp != 'true') {
@@ -148,12 +146,12 @@ function loadActivity() {
             nohelpText = 'Show Help Forum';
             nohelpHref = '#page=' + page + '&nohelp=false';
         }
-        activityNav.append($('<a>').text(nohelpText).attr('href', nohelpHref).click(function() {
+        $('#help-toggle').empty().append($('<a>').text(nohelpText).attr('href', nohelpHref).click(function() {
             currentPage = undefined;
             window.scrollTo(0, 0);
         }));
 
-        activityNav.append($('<a>').text('Next Page').attr('href', '#page=' + data.next + '&nohelp=' + nohelp).click(function() {
+        $('#activity-nav').empty().append($('<a>').text('Next Page').attr('href', '#page=' + data.next + '&nohelp=' + nohelp).click(function() {
             window.scrollTo(0, 0);
         }));
     }).fail(function() {
