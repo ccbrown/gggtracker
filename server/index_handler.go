@@ -43,7 +43,7 @@ var index = `<!DOCTYPE html><html>
 		</div>
         <div class="content-box">
             <h1>{{call $.Translate "Activity"}}</h1>
-			<div id="help-toggle"></div>
+            <div id="help-toggle"></div>
             <a href="rss"><img src="static/images/rss-icon-28.png" class="rss-icon" /></a>
             <table id="activity-table" class="list">
                 <thead>
@@ -59,7 +59,7 @@ var index = `<!DOCTYPE html><html>
                 <tbody>
                 </tbody>
             </table>
-            <div id="activity-nav"></div>
+            <div id="activity-nav" class="right"></div>
         </div>
         <footer>
             <p>This site is not affiliated with Path of Exile or Grinding Gear Games in any way.</p>

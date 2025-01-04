@@ -48,9 +48,8 @@ td {
 	border-bottom: 1px solid #363636;
 }
 
-#activity-nav {
-	display: flex;
-	justify-content: space-between;
+.right {
+	text-align: right;
 }
 
 div.notice {
@@ -65,10 +64,7 @@ div.notice {
 	color: #202020;
 }
 
-div.notice a,
-div.notice a:visited,
-div.notice a:active,
-div.notice a:hover {
+div.notice a, div.notice a:visited, div.notice a:active, div.notice a:hover {
 	color: #202020;
 	text-decoration: underline;
 }
@@ -206,8 +202,7 @@ td.toggle img {
 	filter: opacity(70%);
 }
 
-.expander:hover,
-.collapser:hover {
+.expander:hover, .collapser:hover {
 	filter: opacity(100%);
 }
 
@@ -268,8 +263,7 @@ td.body img {
 	background-color: #323232;
 }
 
-.spoilerTitle,
-.spoilerContent {
+.spoilerTitle, .spoilerContent {
 	padding: 8px;
 }
 
