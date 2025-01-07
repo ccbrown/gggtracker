@@ -99,6 +99,12 @@ div.container {
 	opacity: 1.0;
 }
 
+#help-toggle {
+	position: absolute;
+	top: 24px;
+	right: 50px;
+}
+
 div.content-box h1 {
 	padding: 6px;
 	padding-top: 0px;

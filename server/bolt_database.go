@@ -43,7 +43,7 @@ func (db *BoltDatabase) AddActivity(activity []Activity) error {
 	})
 }
 
-func (db *BoltDatabase) Activity(locale *Locale, start string, count int) ([]Activity, string, error) {
+func (db *BoltDatabase) Activity(locale *Locale, start string, count int, filter func(a Activity) bool) ([]Activity, string, error) {
 	ret := []Activity(nil)
 	next := ""
 	if err := db.db.View(func(tx *bolt.Tx) error {
@@ -66,7 +66,7 @@ func (db *BoltDatabase) Activity(locale *Locale, start string, count int) ([]Act
 			activity, err := unmarshalActivity(k, v)
 			if err != nil {
 				return err
-			} else if activity != nil && locale.ActivityFilter(activity) {
+			} else if activity != nil && locale.ActivityFilter(activity) && filter(activity) {
 				ret = append(ret, activity)
 				next = base64.RawURLEncoding.EncodeToString(k)
 			}

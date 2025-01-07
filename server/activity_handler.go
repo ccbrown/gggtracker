@@ -16,7 +16,21 @@ type jsonResponse struct {
 
 func ActivityHandler(db Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		activity, next, err := db.Activity(LocaleForRequest(c.Request()), c.QueryParam("next"), 50)
+		locale := LocaleForRequest(c.Request())
+		filter := func(a Activity) bool {
+			return true
+		}
+		if c.QueryParam("nohelp") == "true" {
+			filter = func(a Activity) bool {
+				if fp, ok := a.(*ForumPost); ok {
+					if fp.ForumId == locale.HelpForumId {
+						return false
+					}
+				}
+				return true
+			}
+		}
+		activity, next, err := db.Activity(locale, c.QueryParam("next"), 50, filter)
 		if err != nil {
 			return err
 		}
