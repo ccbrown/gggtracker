@@ -17,10 +17,8 @@ type jsonResponse struct {
 func ActivityHandler(db Database) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		locale := LocaleForRequest(c.Request())
-		filter := func(a Activity) bool {
-			return true
-		}
-		if c.QueryParam("nohelp") == "true" {
+		var filter func(Activity) bool
+		if c.QueryParams().Has("nohelp") && c.QueryParam("nohelp") != "false" {
 			filter = func(a Activity) bool {
 				if fp, ok := a.(*ForumPost); ok {
 					if fp.ForumId == locale.HelpForumId {
@@ -52,6 +50,7 @@ func ActivityHandler(db Database) echo.HandlerFunc {
 				Data: a,
 			})
 		}
+		c.Response().Header().Add("Cache-Control", "max-age=120")
 		return c.JSON(200, response)
 	}
 }

@@ -1,4 +1,5 @@
 var currentPage = undefined;
+var currentHideHelp = undefined;
 
 var POE = {
     Forum: {
@@ -18,18 +19,21 @@ var POE = {
 function loadActivity() {
     var params = new URLSearchParams(location.hash.replace(/^#/, ''));
     var page = params.get('page') || '';
-    var nohelp = params.get('nohelp') || '';
-    if (currentPage !== undefined && page == currentPage) {
+    var hideHelp = params.has('nohelp') && params.get('nohelp') !== 'false';
+    if (currentPage !== undefined && page == currentPage && currentHideHelp !== undefined && hideHelp == currentHideHelp) {
         return;
     }
     var previousPage = currentPage;
+    var previousHideHelp = currentHideHelp;
+
     currentPage = page;
+    currentHideHelp = hideHelp;
 
-    if (nohelp == 'true') {
-        $('#activity-table tbody').empty().append($('<tr>').append($('<td>').attr('colspan', 6).text('Loading...')))
-    }
+    var canonicalNohelpParam = hideHelp ? '&nohelp' : '';
 
-    $.get('activity.json?next=' + page + '&nohelp=' + nohelp, function(data) {
+    $('#activity-table tbody').empty().append($('<tr>').append($('<td>').attr('colspan', 6).text('Loading...')))
+
+    $.get('activity.json?next=' + page + canonicalNohelpParam, function(data) {
         var $tbody = $('#activity-table tbody');
         $tbody.empty();
 
@@ -141,28 +145,23 @@ function loadActivity() {
             $tbody.append($tr);
         }
 
-        var nohelpText;
-        var nohelpHref;
-        if (nohelp != 'true') {
-            nohelpText = 'Hide Help Forum';
-            nohelpHref = '#page=' + page + '&nohelp=true';
+        if (hideHelp) {
+            $('#hide-help-forum').hide();
+            $('#show-help-forum').attr('href', page ? '#page=' + page : '#').show();
         } else {
-            nohelpText = 'Show Help Forum';
-            nohelpHref = '#page=' + page + '&nohelp=false';
+            $('#show-help-forum').hide();
+            $('#hide-help-forum').attr('href', (page ? '#page=' + page + '&' : '#') + 'nohelp').show();
         }
-        $('#help-toggle').empty().append($('<a>').text(nohelpText).attr('href', nohelpHref).click(function() {
-            currentPage = undefined;
-            window.scrollTo(0, 0);
-        }));
 
-        $('#activity-nav').empty().append($('<a>').text('Next Page').attr('href', '#page=' + data.next + '&nohelp=' + nohelp).click(function() {
+        $('#activity-nav').empty().append($('<a>').text('Next Page').attr('href', '#page=' + data.next + canonicalNohelpParam).click(function() {
             window.scrollTo(0, 0);
         }));
     }).fail(function() {
         alert('Something went wrong. Better luck next time.');
         currentPage = previousPage
         if (currentPage !== undefined) {
-            window.location.hash = 'page=' + currentPage;
+            var previousNohelpParam = previousHideHelp ? '&nohelp' : '';
+            window.location.hash = 'page=' + currentPage + previousNohelpParam;
         } else {
             window.location.hash = '';
         }
