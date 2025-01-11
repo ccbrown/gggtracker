@@ -11,7 +11,7 @@ var index = `<!DOCTYPE html><html>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>GGG Tracker</title>
     <link rel="shortcut icon" href="static/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="static/style.css?v6" />
+    <link rel="stylesheet" type="text/css" href="static/style.css?v7" />
     <link rel="alternate" type="application/rss+xml" title="GGG Tracker Forum Feed" href="rss" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -37,13 +37,14 @@ var index = `<!DOCTYPE html><html>
 				{{end}}
 			</ul>
 		</header>
-		<div class="notice">
-		<p>Tala moana, warrior! This website is approaching its <strong>12th</strong> birthday! If you've found it useful over the years, you can now show your appreciation in the form of a <a href="https://github.com/sponsors/ccbrown" target="_blank">recurring or one-time donation on GitHub</a>! In addition to showing your appreciation, this offsets server costs and helps support further feature developments (Twitter/X support? Search? GenAI?).</p>
-		<p>Thanks, and stay safe out there, Exile. ❤️</p>
-		</div>
         <div class="content-box">
             <h1>{{call $.Translate "Activity"}}</h1>
-            <div id="help-toggle"></div>
+			{{if ne $.Locale.HelpForumId 0}}
+            <div id="help-toggle">
+				<a href="#" id="hide-help-forum" style="display: none;">{{call $.Translate "Hide Help Forum"}}</a>
+				<a href="#" id="show-help-forum" style="display: none;">{{call $.Translate "Show Help Forum"}}</a>
+			</div>
+			{{end}}
             <a href="rss"><img src="static/images/rss-icon-28.png" class="rss-icon" /></a>
             <table id="activity-table" class="list">
                 <thead>
@@ -73,7 +74,7 @@ var index = `<!DOCTYPE html><html>
         </footer>
     </div>
 
-    <script src="static/index.js?v8"></script>
+    <script src="static/index.js?v9"></script>
 </body>
 </html>`
 

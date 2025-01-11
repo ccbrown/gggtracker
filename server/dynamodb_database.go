@@ -106,28 +106,42 @@ func (db *DynamoDBDatabase) Activity(locale *Locale, start string, count int, fi
 	}
 
 	for len(activity) < count {
+		batchSize := count - len(activity)
+		if filter != nil {
+			// if we're filtering results, fetch extra
+			batchSize = count * 4
+			if batchSize < 50 {
+				batchSize = 50
+			} else if batchSize > 1000 {
+				batchSize = 1000
+			}
+		}
 		result, err := db.client.QueryRequest(&dynamodb.QueryInput{
 			TableName:                 aws.String(db.tableName),
 			KeyConditionExpression:    aws.String(condition),
 			ExpressionAttributeValues: attributeValues,
 			ExclusiveStartKey:         startKey,
-			Limit:                     aws.Int64(int64(count - len(activity))),
+			Limit:                     aws.Int64(int64(batchSize)),
 			ScanIndexForward:          aws.Bool(false),
 		}).Send(context.Background())
 		if err != nil {
 			return nil, "", err
 		}
+		startKey = result.LastEvaluatedKey
 		for _, item := range result.Items {
 			if a, err := unmarshalActivity(item["rk"].B, item["v"].B); err != nil {
 				return nil, "", err
-			} else if a != nil && filter(a) {
+			} else if a != nil && (filter == nil || filter(a)) {
 				activity = append(activity, a)
+				if len(activity) == count {
+					startKey = item
+					break
+				}
 			}
 		}
-		if result.LastEvaluatedKey == nil {
+		if result.LastEvaluatedKey == nil || len(activity) == count {
 			break
 		}
-		startKey = result.LastEvaluatedKey
 	}
 
 	var next string
