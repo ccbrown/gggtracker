@@ -137,6 +137,7 @@ func (indexer *ForumIndexer) run() {
 		{Username: "ShaunB_GGG"},
 		{Username: "Ayelen_GGG"},
 		{Username: "Timothy_GGG"},
+		{Username: "BenMH_GGG"},
 	}
 
 	timezone := (*time.Location)(nil)
