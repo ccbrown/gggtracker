@@ -140,7 +140,7 @@ func (indexer *ForumIndexer) run() {
 		{Username: "BenMH_GGG"},
 		{Username: "Ian_GGG"},
 		{Username: "EthanH_GGG"},
-		{Username: "Yrone_GGG", Discriminator: 9576},
+		{Username: "Yrone_GGG"},
 		{Username: "Sam_GGG", Discriminator: 2420},
 		{Username: "Ting_GGG", Discriminator: 2357},
 		{Username: "Ramon_GGG"},
