@@ -195,6 +195,22 @@ var Locales = []*Locale{
 	},
 }
 
+var helpForumIds map[int]struct{}
+
+func init() {
+	helpForumIds = make(map[int]struct{})
+	for _, l := range Locales {
+		if l.HelpForumId != 0 {
+			helpForumIds[l.HelpForumId] = struct{}{}
+		}
+	}
+}
+
+func IsHelpForumId(id int) bool {
+	_, ok := helpForumIds[id]
+	return ok
+}
+
 func LocaleForRequest(r *http.Request) *Locale {
 	subdomain := ""
 	if r.Host != "" {

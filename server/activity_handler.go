@@ -20,12 +20,8 @@ func ActivityHandler(db Database) echo.HandlerFunc {
 		var filter func(Activity) bool
 		if c.QueryParams().Has("nohelp") && c.QueryParam("nohelp") != "false" {
 			filter = func(a Activity) bool {
-				if fp, ok := a.(*ForumPost); ok {
-					if fp.ForumId == locale.HelpForumId {
-						return false
-					}
-				}
-				return true
+				fp, ok := a.(*ForumPost)
+				return !(ok && IsHelpForumId(fp.ForumId))
 			}
 		}
 		activity, next, err := db.Activity(locale, c.QueryParam("next"), 50, filter)
